@@ -1,0 +1,141 @@
+/*body{
+  height: 100%;
+  flex-direction: column;
+}*/
+
+.main{
+  height: 75%;
+}
+.footer{
+  height: 25%;
+}
+
+.top{
+  display: flex;
+  background-color: #F5C85F;
+  height: 10px;
+  width: auto;
+}
+
+.images {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.phone {
+  padding-right: 30px;
+}
+
+.tcg_logo{
+  padding-left: 25px;
+}
+
+.v {
+  background: linear-gradient(0deg, transparent, #F5C85F, transparent);
+  height: 275px;
+  width: 3px;
+  border: none;
+}
+
+@media screen and (max-width: 768px) {
+  .phone{
+    display: none;
+  }
+
+  .v{
+    display: none;
+  }
+ }
+
+ .trianglediv{
+   display: flex;
+   justify-content: flex-end;
+   background-image: url("triangle.png");
+   background-repeat: space;
+ }
+
+ .features{
+   display: flex;
+   justify-content: space-around;
+   align-items: center;
+   align-content: center;
+   width: auto;
+   height: 300px;
+   background-color: #EEE;
+   padding-top: none;
+ }
+
+.list,
+.reminder,
+.safe,
+.text{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 180px;
+  height: 200px;
+}
+
+.texttitle{
+  font-style: normal;
+  font-weight: bold;
+  color: #111;
+  padding: 10px;
+}
+
+.info{
+  font-family: "Open Sans";
+  color: #999;
+  padding: 10px;
+}
+
+.footer{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F5C85F;
+  width: inherit;
+  height: 253px;
+}
+
+.footerlist{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.labeltext{
+  color: white;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 20px;
+}
+
+.button,
+.input{
+  border: none;
+  border-radius: 10px;
+  height: 40px;
+}
+
+.input{
+  width: 250px;
+}
+
+.button{
+  width: 110px;
+  background-color: #F5C85F;
+  color: white;
+  border: 2px solid white;
+  margin-top: 20px;
+  margin-bottom: 40px;
+  font-size: 20px;
+}
