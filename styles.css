@@ -1,142 +1,124 @@
-/*body{
-  height: 100%;
-  flex-direction: column;
-}*/
+body {
+  font-family: "Open Sans", sans-serif;
+}
 
-.main{
+.main {
   height: 75%;
-}
-.footer{
-  height: 25%;
-}
-
-.top{
+  border-top: 10px solid #F5C85F;
   display: flex;
-  background-color: #F5C85F;
-  height: 10px;
-  width: auto;
-}
-
-.images {
-  display: flex;
-  flex-direction: row;
   justify-content: center;
   align-items: center;
   align-content: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
+  padding: 40px 0;
 }
 
-.phone {
+.phone-logo {
   padding-right: 30px;
 }
 
-.tcg_logo{
+.tcg-logo {
   padding-left: 25px;
 }
 
-.v {
+.v-div {
   background: linear-gradient(0deg, transparent, #F5C85F, transparent);
   height: 275px;
   width: 3px;
   border: none;
 }
 
-@media screen and (max-width: 768px) {
-  .phone{
-    display: none;
-  }
-
-  .v{
-    display: none;
-  }
- }
-
- .trianglediv{
+ .triangle-div {
    display: flex;
    justify-content: flex-end;
    background-image: url("triangle.png");
    background-repeat: space;
  }
 
- .features{
+ .features {
    display: flex;
    justify-content: space-around;
    align-items: center;
-   align-content: center;
-   width: auto;
-   height: 300px;
+   height: 310px;
    background-color: #EEE;
-   padding-top: none;
+   position: relative;
  }
 
-.list,
-.reminder,
-.safe,
-.text{
+ .features:before {
+   content: '';
+   position: absolute;
+   background-image: url("triangle.png");
+   width: 100%;
+   height: 12px;
+   top: -12px;
+ }
+
+.money-feature,
+.reminder-feature,
+.security-feature {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   text-align: center;
   width: 180px;
   height: 200px;
 }
 
-.texttitle{
-  font-style: normal;
+.feature-title {
   font-weight: bold;
   color: #111;
   padding: 10px;
 }
 
-.info{
-  font-family: "Open Sans";
+.feature-info {
   color: #999;
   padding: 10px;
 }
 
-.footer{
+.footer {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: space-around;
   align-items: center;
   background-color: #F5C85F;
-  width: inherit;
-  height: 253px;
+  width: 100%;
+  height: 235px;
   box-shadow: 0px -1px 5px #999;
 }
 
-.footerlist{
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.labeltext{
+.subscribe-label {
   color: white;
   font-weight: bold;
   font-size: 20px;
   padding: 20px;
 }
 
-.button,
-.input{
+.subscribe-button,
+.subscribe-input {
   border: none;
   border-radius: 10px;
   height: 40px;
 }
 
-.input{
+.subscribe-input {
   width: 250px;
 }
 
-.button{
+.subscribe-button {
   width: 110px;
   background-color: #F5C85F;
   color: white;
   border: 2px solid white;
-  margin-top: 20px;
-  margin-bottom: 40px;
+  margin: 10px 0 20px 0;
   font-size: 20px;
+}
+
+@media screen and (max-width: 768px) {
+  .phone-logo {
+    display: none;
+  }
+
+  .v-div {
+    display: none;
+  }
 }
