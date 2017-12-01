@@ -20,19 +20,12 @@ body {
   padding-left: 25px;
 }
 
-.v-div {
+.vertical-separator {
   background: linear-gradient(0deg, transparent, #F5C85F, transparent);
   height: 275px;
   width: 3px;
   border: none;
 }
-
- .triangle-div {
-   display: flex;
-   justify-content: flex-end;
-   background-image: url("triangle.png");
-   background-repeat: space;
- }
 
  .features {
    display: flex;
@@ -52,9 +45,7 @@ body {
    top: -12px;
  }
 
-.money-feature,
-.reminder-feature,
-.security-feature {
+.feature {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -101,7 +92,8 @@ body {
 }
 
 .subscribe-input {
-  width: 250px;
+  max-width: 250px;
+  width: 100%;
 }
 
 .subscribe-button {
