@@ -24,7 +24,6 @@ services:
 
 before_script:
   - psql -c "CREATE DATABASE woloxland;" -U postgres
-  - npm install
 
 script:
   npm test
