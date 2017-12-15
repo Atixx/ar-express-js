@@ -1,2 +1,2 @@
 // console db =
-url=postgres://postgres@localhost:5432/usertest
+url=postgres://postgres @localhost:5432/usertest
