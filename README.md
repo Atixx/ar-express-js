@@ -1,7 +1,7 @@
-kickoff
+KickOff
 ===============
 
-kickoff
+
 
 ## First steps
 
@@ -17,7 +17,7 @@ Run ```node ./scripts/kick-off.js``` from project's rootpath to remove the exist
 
 #### Database configuration
 Before running the app, make sure you must have a postgres db created. Then, set the `$NODE_API_DB_URL` environmental variable. It should look something like: `postgres://username:password@host:port/databasename`.
-For more information feel free to glance at the [`app/orm.js`](https://github.com/Wolox/kickoff/blob/master/app/orm.js#L6) file.
+For more information feel free to glance at the [`app/orm.js`](https://github.com/Wolox/KickOff/blob/master/app/orm.js#L6) file.
 
 ### Migrations
 
