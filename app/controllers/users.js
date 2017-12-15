@@ -31,12 +31,10 @@ exports.create = (req, res, next) => {
     .then(hash => {
       user.password = hash;
 
-      return userService
-        .create(user)
-        .then(u => {
-          res.status(201);
-          res.end();
-        })
+      return userService.create(user).then(u => {
+        res.status(201);
+        res.end();
+      });
     })
     .catch(err => {
       next(errors.defaultError(err));
