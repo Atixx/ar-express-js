@@ -1,6 +1,8 @@
 KickOff
 ===============
+## Travis
 
+[![Build Status](https://travis-ci.org/wolox-training/ar-express-js.svg?branch=travis)](https://travis-ci.org/wolox-training/ar-express-js)
 
 
 ## First steps
