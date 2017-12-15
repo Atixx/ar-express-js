@@ -1,6 +1,16 @@
 exports.invalidUser = {
   statusCode: 400,
-  message: 'Invalid username or password'
+  message: 'Invalid email or password'
+};
+
+exports.invalidPasswordLength = {
+  statusCode: 400,
+  message: 'Password must have length >= 8'
+};
+
+exports.invalidPasswordFormat = {
+  statusCode: 400,
+  message: 'Password must be alphanumeric'
 };
 
 exports.notFound = {

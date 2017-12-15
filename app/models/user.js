@@ -10,11 +10,11 @@ exports.getModel = db => {
         allowNull: false,
         primaryKey: true
       },
-      firstName: {
+      firstname: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      lastName: {
+      lastname: {
         type: Sequelize.STRING,
         allowNull: false
       },

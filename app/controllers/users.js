@@ -4,33 +4,39 @@ const bcrypt = require('bcrypt');
 const errors = require('../errors');
 const userService = require('../services/users');
 const sessionManager = require('./../services/sessionManager');
+const isAlphaNumeric = require('validate.io-alphanumeric');
 
 exports.create = (req, res, next) => {
   const saltRounds = 10;
 
   const user = req.body
     ? {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
         password: req.body.password,
         email: req.body.email
       }
     : {};
+
+  if (!isAlphaNumeric(user.password)) {
+    return next(errors.invalidPasswordFormat);
+  }
+
+  if (user.password.length < 8) {
+    return next(errors.invalidPasswordLength);
+  }
 
   bcrypt
     .hash(user.password, saltRounds)
     .then(hash => {
       user.password = hash;
 
-      userService
+      return userService
         .create(user)
         .then(u => {
           res.status(201);
           res.end();
         })
-        .catch(err => {
-          next(err);
-        });
     })
     .catch(err => {
       next(errors.defaultError(err));
