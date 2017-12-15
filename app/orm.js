@@ -3,7 +3,9 @@ const Sequelize = require('sequelize'),
   logger = require('./logger'),
   models = require('./models');
 
-exports.DB_URL = config.common.database.url || process.env.NODE_API_DB_URL; // eslint-disable-line max-len
+console.log(config.common.database.url);
+
+exports.DB_URL = process.env.NODE_API_DB_URL || config.common.database.url;  // eslint-disable-line max-len
 
 exports.init = () => {
   const db = new Sequelize(exports.DB_URL, {
