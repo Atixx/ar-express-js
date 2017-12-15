@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - "6.11.1"
+  - "9.2.0"
 
 sudo: true
 
@@ -23,7 +23,7 @@ services:
   - postgresql
 
 before_script:
-  - psql -c "CREATE DATABASE usertest;" -U postgres
+  - psql -c "CREATE DATABASE woloxland;" -U postgres
   - npm install
 
 script:
