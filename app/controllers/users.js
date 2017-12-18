@@ -55,7 +55,7 @@ exports.login = (req, res, next) => {
         if (isValid) {
           const auth = sessionManager.encode({ username: u.username });
 
-          res.status(200);
+          res.status(201);
           res.set(sessionManager.HEADER_NAME, auth);
           res.send(u);
         } else {
