@@ -18,6 +18,11 @@ exports.notFound = {
   message: 'Not found'
 };
 
+exports.invalidToken = {
+  statusCode: 503,
+  message: 'Invalid Token'
+};
+
 exports.defaultError = message => {
   return {
     statusCode: 500,
