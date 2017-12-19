@@ -1,7 +1,7 @@
 const user = require('./user');
-const session = require('./session');
+const sessions = require('./session');
 
 exports.define = db => {
   user.getModel(db);
-  session.getModel(db);
+  sessions.getModel(db);
 };

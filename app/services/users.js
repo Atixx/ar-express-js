@@ -16,9 +16,3 @@ exports.getOne = user => {
     throw errors.databaseError(err.detail);
   });
 };
-
-exports.isValidSession = (email, token) => {
-  return orm.models.sessions.findOne({ where: email, token }).catch(err => {
-    throw errors.invalidToken;
-  });
-};

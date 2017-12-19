@@ -6,3 +6,15 @@ exports.create = session => {
     throw errors.savingError(err.errors);
   });
 };
+
+exports.isValid = (email, token) => {
+  return orm.models.sessions.findOne({ where: token }).catch(err => {
+    throw errors.invalidToken;
+  });
+};
+
+exports.getCount = email => {
+  return orm.models.sessions.count({ email }).catch(err => {
+    throw errors.databaseError(err.message);
+  });
+};
