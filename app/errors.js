@@ -20,7 +20,7 @@ exports.notFound = {
 
 exports.defaultError = message => {
   return {
-    statusCode: 500,
+    statusCode: 400,
     message
   };
 };
