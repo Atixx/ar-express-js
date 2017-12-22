@@ -23,7 +23,8 @@ services:
   - postgresql
 
 before_script:
-  - psql -c "CREATE DATABASE woloxland;" -U postgres
+  - psql -c "CREATE ROLE arinaldi PASSWORD 'wolox1189' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;"
+  - psql -c "CREATE DATABASE woloxland;" -U arinaldi
 
 script:
   npm test
