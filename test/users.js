@@ -4,24 +4,9 @@ const chai = require('chai'),
   sessionManager = require('./../app/services/sessionManager'),
   should = chai.should();
 
-describe('users', () => {
-  describe('users sessions', () => {
-    it('should fail because of invalid email', done => {
-      chai
-        .request(server)
-        .post('/users/sessions')
-        .send({ email: 'invalid', password: '12345678' })
-        .catch(err => {
-          err.should.have.status(400);
-          err.response.should.be.json;
-          err.response.body.should.have.property('error');
-        })
-        .then(() => done());
-    });
-  });
-
-  describe('users create', () => {
-    it('creation OK', done => {
+describe('users test', () => {
+  describe('/users POST', () => {
+    it('should be successful', done => {
       chai
         .request(server)
         .post('/users')
