@@ -8,25 +8,23 @@ exports.execute = db => {
       data.push(
         db.models.user.create({
           firstname: 'firstname1',
-          lastname: 'lastName1',
+          lastname: 'lastname1',
           email: 'email1@wolox.com.ar',
           password: hash
         })
       );
       data.push(
         db.models.user.create({
-          firstname: 'firstName2',
-          lastname: 'lastName2',
-          username: 'username2',
+          firstname: 'firstname2',
+          lastname: 'lastname2',
           email: 'email2@wolox.com.ar',
           password: hash
         })
       );
       data.push(
         db.models.user.create({
-          firstname: 'firstName3',
-          lastname: 'lastName3',
-          username: 'username3',
+          firstname: 'firstname3',
+          lastname: 'lastname3',
           email: 'email3@wolox.com.ar',
           password: hash
         })
