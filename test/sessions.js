@@ -13,8 +13,8 @@ const successfulLogin = cb => {
     .send({ email: 'email1@wolox.com.ar', password: '12345678' });
 };
 
-describe('sessions', () => {
-  it('User signin twice and should be ok', done => {
+describe('/users/sessions POST', () => {
+  it('Should successful because user signin twice correctly', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
       res.should.be.json;
@@ -32,7 +32,7 @@ describe('sessions', () => {
       });
     });
   });
-  it('User signin and his token are valid', done => {
+  it('Should successful because user signin and his token are valid', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
       res.should.be.json;
@@ -45,7 +45,7 @@ describe('sessions', () => {
         .then(() => done());
     });
   });
-  it('Should fail by invalid token', done => {
+  it('Should fail because of invalid token', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
       res.should.be.json;
@@ -60,7 +60,7 @@ describe('sessions', () => {
         .then(() => done());
     });
   });
-  it('User sigin and logout and should be ok', done => {
+  it('Should successful because user logout correctly', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
       res.should.be.json;
@@ -70,19 +70,19 @@ describe('sessions', () => {
         .then(count => {
           count.should.to.equal(1);
         })
-        .then(
-          chai
+        .then(() => {
+          return chai
             .request(server)
             .post('/users/logout')
             .send({ email: res.body.email })
             .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
             .then(res2 => {
-              return sessionService.getCount(res.body.email).then(count => {
-                count.should.to.equal(0);
+              return sessionService.getCount(res.body.email).then(count2 => {
+                count2.should.to.equal(0);
               });
             })
-        )
-        .then(() => done());
+            .then(() => done());
+        });
     });
   });
 });
