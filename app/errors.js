@@ -3,14 +3,14 @@ exports.invalidUser = {
   message: 'Invalid email or password'
 };
 
-exports.invalidPasswordLength = {
-  statusCode: 400,
-  message: 'Password must have length >= 8'
-};
-
 exports.invalidPasswordFormat = {
   statusCode: 400,
-  message: 'Password must be alphanumeric'
+  message: 'Password must be alphanumeric and must have a length > 8'
+};
+
+exports.invalidEmail = {
+  statusCode: 400,
+  message: 'Email must have the following domain: @wolox.com.ar'
 };
 
 exports.notFound = {
