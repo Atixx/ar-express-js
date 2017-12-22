@@ -1,9 +1,9 @@
-// const controller = require('./controllers/controller');
 const users = require('./controllers/users');
+const sessions = require('./controllers/sessions');
+const auth = require('./middlewares/auth');
 
 exports.init = app => {
-  // app.get('/endpoint/get/path', [], controller.methodGET);
-  // app.put('/endpoint/put/path', [], controller.methodPUT);
   app.post('/users', [], users.create);
   app.post('/users/sessions', [], users.login);
+  app.post('/users/logout', [auth.secure], sessions.logout);
 };

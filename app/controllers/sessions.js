@@ -21,3 +21,15 @@ exports.create = (req, res, next) => {
       next(errors.defaultError(err));
     });
 };
+
+exports.logout = (req, res, next) => {
+  return sessionService
+    .delete(req.body.email, req.headers.authorization)
+    .then(u => {
+      res.status(201);
+      res.end();
+    })
+    .catch(err => {
+      next(errors.defaultError(err));
+    });
+};

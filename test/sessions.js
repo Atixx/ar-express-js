@@ -3,7 +3,8 @@ const chai = require('chai'),
   dictum = require('dictum.js'),
   sessionManager = require('./../app/services/sessionManager'),
   sessionService = require('./../app/services/sessions'),
-  should = chai.should();
+  should = chai.should(),
+  delay = require('timeout-as-promise');
 
 const successfulLogin = cb => {
   return chai
@@ -37,9 +38,9 @@ describe('sessions', () => {
       res.should.be.json;
       res.headers.should.have.property(sessionManager.HEADER_NAME);
       return sessionService
-        .isValid(res.body.email, res.headers.authorize)
+        .isValid(res.body.email, res.headers.authorization)
         .then(isValid => {
-          isValid.should.have.property('dataValues');
+          isValid.should.to.be.true;
         })
         .then(() => done());
     });
@@ -49,16 +50,39 @@ describe('sessions', () => {
       res.should.have.status(201);
       res.should.be.json;
       res.headers.should.have.property(sessionManager.HEADER_NAME);
-      setTimeout(function() {
-        return sessionService
-          .isValid(res.body.email, res.headers.authorize)
-          .catch(err => {
-            err.should.have.status(400);
-            err.response.should.be.json;
-            err.response.body.should.have.property('error');
-          })
-          .then(() => done());
-      }, 1000);
+      delay(1000)
+        .then(() => {
+          return sessionService.isValid(res.body.email, res.headers.authorization).catch(err => {
+            err.should.be.property('statusCode');
+            err.statusCode.should.to.equal(400);
+          });
+        })
+        .then(() => done());
+    });
+  });
+  it('User sigin and logout and should be ok', done => {
+    return successfulLogin().then(res => {
+      res.should.have.status(201);
+      res.should.be.json;
+      res.headers.should.have.property(sessionManager.HEADER_NAME);
+      return sessionService
+        .getCount(res.body.email)
+        .then(count => {
+          count.should.to.equal(1);
+        })
+        .then(
+          chai
+            .request(server)
+            .post('/users/logout')
+            .send({ email: res.body.email })
+            .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+            .then(res2 => {
+              return sessionService.getCount(res.body.email).then(count => {
+                count.should.to.equal(0);
+              });
+            })
+        )
+        .then(() => done());
     });
   });
 });

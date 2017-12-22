@@ -19,7 +19,7 @@ exports.notFound = {
 };
 
 exports.invalidToken = {
-  statusCode: 503,
+  statusCode: 400,
   message: 'Invalid Token'
 };
 
