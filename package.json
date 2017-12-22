@@ -50,7 +50,8 @@
     "umzug": "^2.0.1",
     "winston": "^2.4.0",
     "winston-daily-rotate-file": "^1.7.2",
-    "validate.io-alphanumeric": "1.0.0"
+    "validate.io-alphanumeric": "1.0.0",
+    "timeout-as-promise": "1.0.0"
   },
   "devDependencies": {
     "babel": "6.3.13",
