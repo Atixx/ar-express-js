@@ -29,12 +29,12 @@ describe('users test', () => {
         .send({
           lastname: 'Rinaldi',
           email: 'alan.rinaldi@wolox.com.ar',
-          password: '1234'
+          password: '12345678'
         })
         .catch(err => {
           err.should.have.status(400);
           err.response.should.be.json;
-          err.response.body.should.have.property('error');
+          err.response.text.should.include('firstname cannot be null');
         })
         .then(() => done());
     });
@@ -51,7 +51,7 @@ describe('users test', () => {
         .catch(err => {
           err.should.have.status(400);
           err.response.should.be.json;
-          err.response.body.should.have.property('error');
+          err.response.text.should.include('be alphanumeric');
         })
         .then(() => done());
     });
@@ -68,7 +68,7 @@ describe('users test', () => {
         .catch(err => {
           err.should.have.status(400);
           err.response.should.be.json;
-          err.response.body.should.have.property('error');
+          err.response.text.should.include('length > 8');
         })
         .then(() => done());
     });
@@ -85,7 +85,7 @@ describe('users test', () => {
         .catch(err => {
           err.should.have.status(400);
           err.response.should.be.json;
-          err.response.body.should.have.property('error');
+          err.response.text.should.include('@wolox.com.ar');
         })
         .then(() => done());
     });
@@ -102,7 +102,7 @@ describe('users test', () => {
         .catch(err => {
           err.should.have.status(400);
           err.response.should.be.json;
-          err.response.body.should.have.property('error');
+          err.response.text.should.include('@wolox.com.ar');
         })
         .then(() => done());
     });
@@ -111,15 +111,15 @@ describe('users test', () => {
         .request(server)
         .post('/users')
         .send({
-          firstname: 'Alan',
-          lastname: 'Rinaldi',
-          email: 'alan.rinaldi@wolox.com.ar',
+          firstname: 'firstname1',
+          lastname: 'lastname1',
+          email: 'email1@wolox.com.ar',
           password: '12345678'
         })
         .catch(err => {
           err.should.have.status(400);
           err.response.should.be.json;
-          err.response.body.should.have.property('error');
+          err.response.text.should.include('email must be unique');
         })
         .then(() => done());
     });
