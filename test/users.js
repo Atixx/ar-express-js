@@ -5,7 +5,7 @@ const chai = require('chai'),
   should = chai.should();
 
 describe('users', () => {
-  describe('users login', () => {
+  describe('/users/sessions POST', () => {
     it('should fail because of invalid email', done => {
       chai
         .request(server)
@@ -15,6 +15,7 @@ describe('users', () => {
           err.should.have.status(400);
           err.response.should.be.json;
           err.response.body.should.have.property('error');
+          err.response.text.should.include('Invalid email or password');
         })
         .then(() => done());
     });
@@ -27,10 +28,11 @@ describe('users', () => {
           err.should.have.status(400);
           err.response.should.be.json;
           err.response.body.should.have.property('error');
+          err.response.text.should.include('Invalid email or password');
         })
         .then(() => done());
     });
-    it('SignIn be successful', done => {
+    it('Should be successful', done => {
       chai
         .request(server)
         .post('/users/sessions')
