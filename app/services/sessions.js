@@ -22,6 +22,17 @@ exports.isValid = (e, t) => {
     });
 };
 
+exports.existToken = t => {
+  return orm.models.sessions
+    .findOne({ where: { token: t } })
+    .then(u => {
+      return true;
+    })
+    .catch(err => {
+      throw errors.invalidToken;
+    });
+};
+
 exports.getCount = email => {
   return orm.models.sessions.count({ email }).catch(err => {
     throw errors.databaseError(err.message);

@@ -17,11 +17,11 @@ exports.getOne = user => {
   });
 };
 
-exports.findAll = () => {
+exports.getAll = (limit = 20, offset = 0) => {
   return orm.models.user
-    .findAll()
-    .then(users => {
-      console.log('FIND ALL 2');
+    .findAll({
+      offset,
+      limit
     })
     .catch(err => {
       throw errors.databaseError(err.detail);

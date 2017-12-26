@@ -81,10 +81,9 @@ exports.login = (req, res, next) => {
 
 exports.list = (req, res, next) => {
   return sessionService
-    .isValid(req.body.email, req.headers.authorization)
-    .then(() => {
-      return userService.findAll.then(u => {
-        console.log(u);
+    .existToken(req.headers[sessionManager.HEADER_NAME])
+    .then(valid => {
+      return userService.getAll().then(u => {
         res.status(201);
         res.end();
       });
