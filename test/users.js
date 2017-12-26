@@ -183,12 +183,12 @@ describe('users', () => {
           return chai
             .request(server)
             .get('/users')
-            .set(sessionManager.HEADER_NAME, res.headers.authorization)
+            .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
             .then(res2 => {
+              // res.should.have.status(201);
+              res.should.be.json;
+              // res.headers.should.have.property(sessionManager.HEADER_NAME);
               console.log(res2);
-            })
-            .catch(err => {
-              console.log(err);
             })
             .then(() => done());
         });
