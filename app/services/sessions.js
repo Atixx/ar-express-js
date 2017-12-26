@@ -16,7 +16,9 @@ exports.isValid = (e, t) => {
       return true;
     })
     .catch(err => {
-      throw errors.invalidToken;
+      return exports.delete(e, t).then(() => {
+        throw errors.invalidToken;
+      });
     });
 };
 
@@ -28,6 +30,12 @@ exports.getCount = email => {
 
 exports.delete = (e, t) => {
   return orm.models.sessions.destroy({ where: { email: e, token: t } }).catch(err => {
+    throw errors.databaseError(err.detail);
+  });
+};
+
+exports.deleteAll = e => {
+  return orm.models.sessions.destroy({ where: { email: e } }).catch(err => {
     throw errors.databaseError(err.detail);
   });
 };
