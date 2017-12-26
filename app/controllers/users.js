@@ -4,10 +4,11 @@ const bcrypt = require('bcrypt');
 const errors = require('../errors');
 const userService = require('../services/users');
 const sessionManager = require('./../services/sessionManager');
-const isAlphaNumeric = require('validate.io-alphanumeric');
 
 exports.create = (req, res, next) => {
   const saltRounds = 10;
+  const regexPassword = /^\w{8,}$/;
+  const regexEmail = /.*@wolox.com.ar$/;
 
   const user = req.body
     ? {
@@ -18,12 +19,12 @@ exports.create = (req, res, next) => {
       }
     : {};
 
-  if (!isAlphaNumeric(user.password)) {
+  if (!user.password.match(regexPassword)) {
     return next(errors.invalidPasswordFormat);
   }
 
-  if (user.password.length < 8) {
-    return next(errors.invalidPasswordLength);
+  if (!user.email.match(regexEmail)) {
+    return next(errors.invalidEmail);
   }
 
   bcrypt
