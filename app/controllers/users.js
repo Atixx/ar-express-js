@@ -8,7 +8,7 @@ const sessionManager = require('./../services/sessionManager');
 exports.create = (req, res, next) => {
   const saltRounds = 10;
   const regexPassword = /^\w{8,}$/;
-  const regexEmail = /@wolox.com.ar/;
+  const regexEmail = /.*@wolox.com.ar$/;
 
   const user = req.body
     ? {
