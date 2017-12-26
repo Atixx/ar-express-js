@@ -78,3 +78,18 @@ exports.login = (req, res, next) => {
     }
   });
 };
+
+exports.list = (req, res, next) => {
+  return sessionService
+    .isValid(req.body.email, req.headers.authorization)
+    .then(() => {
+      return userService.findAll.then(u => {
+        console.log(u);
+        res.status(201);
+        res.end();
+      });
+    })
+    .catch(err => {
+      next(errors.defaultError(err));
+    });
+};

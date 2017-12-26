@@ -16,3 +16,14 @@ exports.getOne = user => {
     throw errors.databaseError(err.detail);
   });
 };
+
+exports.findAll = () => {
+  return orm.models.user
+    .findAll()
+    .then(users => {
+      console.log('FIND ALL 2');
+    })
+    .catch(err => {
+      throw errors.databaseError(err.detail);
+    });
+};
