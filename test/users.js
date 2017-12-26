@@ -72,7 +72,7 @@ describe('users test', () => {
         })
         .then(() => done());
     });
-    it('should fail because of invalid email', done => {
+    it('should fail because of invalid email 1', done => {
       chai
         .request(server)
         .post('/users')
@@ -80,6 +80,40 @@ describe('users test', () => {
           firstname: 'Alan',
           lastname: 'Rinaldi',
           email: 'alan.rinaldi',
+          password: '12345678'
+        })
+        .catch(err => {
+          err.should.have.status(400);
+          err.response.should.be.json;
+          err.response.text.should.include('@wolox.com.ar');
+        })
+        .then(() => done());
+    });
+    it('should fail because of invalid email 2', done => {
+      chai
+        .request(server)
+        .post('/users')
+        .send({
+          firstname: 'Alan',
+          lastname: 'Rinaldi',
+          email: '@wolox.com.ar',
+          password: '12345678'
+        })
+        .catch(err => {
+          err.should.have.status(400);
+          err.response.should.be.json;
+          err.response.text.should.include('@wolox.com.ar');
+        })
+        .then(() => done());
+    });
+    it('should fail because of invalid email 3', done => {
+      chai
+        .request(server)
+        .post('/users')
+        .send({
+          firstname: 'Alan',
+          lastname: 'Rinaldi',
+          email: '@wolox.com.ar.es',
           password: '12345678'
         })
         .catch(err => {
