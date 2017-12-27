@@ -7,5 +7,5 @@ exports.init = app => {
   app.post('/users/sessions', users.login);
   app.post('/users/logout', auth.secure, sessions.logout);
   app.post('/users/logout/all', auth.secure, sessions.logoutAll);
-  app.post('/users',users.list);
+  app.get('/users', auth.secure, users.list);
 };

@@ -17,10 +17,11 @@ exports.getOne = user => {
   });
 };
 
-exports.getAll = (limit = 20, offset = 0) => {
+exports.getAll = (limit = 20, page = 0) => {
   return orm.models.user
     .findAll({
-      offset,
+      order: [['id', 'ASC']],
+      offset: limit * page,
       limit
     })
     .catch(err => {
