@@ -29,3 +29,17 @@ exports.secure = (req, res, next) => {
     res.end();
   }
 };
+
+exports.admin = (req, res, next) => {
+  const email = req.body.email;
+
+  orm.models.user.findOne({ where: { email } }).then(u => {
+    if (u.admin) {
+      req.email = email;
+      next();
+    } else {
+      res.status(401);
+      res.end();
+    }
+  });
+};

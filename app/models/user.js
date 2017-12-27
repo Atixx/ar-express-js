@@ -30,6 +30,10 @@ exports.getModel = db => {
       password: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      admin: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
       }
     },
     {

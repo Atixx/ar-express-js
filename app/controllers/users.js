@@ -16,7 +16,8 @@ exports.create = (req, res, next) => {
         firstname: req.body.firstname,
         lastname: req.body.lastname,
         password: req.body.password,
-        email: req.body.email
+        email: req.body.email,
+        admin: NO
       }
     : {};
 
