@@ -24,12 +24,10 @@ exports.create = (req, res, next) => {
 
 exports.logout = (req, res, next) => {
   return sessionService
-    .isValid(req.body.email, req.headers.authorization)
+    .delete(req.body.email, req.headers.authorization)
     .then(() => {
-      return sessionService.delete(req.body.email, req.headers.authorization).then(() => {
-        res.status(201);
-        res.end();
-      });
+      res.status(201);
+      res.end();
     })
     .catch(err => {
       next(errors.defaultError(err));
@@ -38,12 +36,10 @@ exports.logout = (req, res, next) => {
 
 exports.logoutAll = (req, res, next) => {
   return sessionService
-    .isValid(req.body.email, req.headers.authorization)
+    .deleteAll(req.body.email, req.headers.authorization)
     .then(() => {
-      return sessionService.deleteAll(req.body.email, req.headers.authorization).then(() => {
-        res.status(201);
-        res.end();
-      });
+      res.status(201);
+      res.end();
     })
     .catch(err => {
       next(errors.defaultError(err));
