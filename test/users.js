@@ -168,4 +168,27 @@ describe('users', () => {
         .then(() => done());
     });
   });
+
+  describe('/users GET', () => {
+    it('Should be successful', done => {
+      return chai
+        .request(server)
+        .post('/users/sessions')
+        .send({ email: 'email1@wolox.com.ar', password: '12345678' })
+        .then(res => {
+          res.should.have.status(201);
+          res.should.be.json;
+          res.headers.should.have.property(sessionManager.HEADER_NAME);
+          dictum.chai(res);
+          return chai
+            .request(server)
+            .get('/users')
+            .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+            .then(res2 => {
+              res2.should.have.status(200);
+            })
+            .then(() => done());
+        });
+    });
+  });
 });
