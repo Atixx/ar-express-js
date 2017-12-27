@@ -4,6 +4,14 @@ const chai = require('chai'),
   sessionManager = require('./../app/services/sessionManager'),
   should = chai.should();
 
+const delay = time => {
+  return new Promise(function(fulfill, reject) {
+    setTimeout(function() {
+      fulfill();
+    }, time);
+  });
+};
+
 describe('users test', () => {
   describe('/users/sessions POST', () => {
     it('should fail because of invalid email', done => {
@@ -223,6 +231,28 @@ describe('users test', () => {
               res2.should.have.status(200);
             })
             .then(() => done());
+        });
+    });
+    it('Should fail because invalid token', done => {
+      return chai
+        .request(server)
+        .post('/users/sessions')
+        .send({ email: 'email1@wolox.com.ar', password: '12345678' })
+        .then(res => {
+          res.should.have.status(201);
+          res.should.be.json;
+          res.headers.should.have.property(sessionManager.HEADER_NAME);
+          dictum.chai(res);
+          delay(1000).then(() => {
+            return chai
+              .request(server)
+              .get('/users')
+              .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+              .catch(err => {
+                err.response.should.have.status(401);
+              })
+              .then(() => done());
+          });
         });
     });
   });
