@@ -42,7 +42,7 @@ describe('/users/sessions POST', () => {
           const decode = sessionManager.decode(res.headers.authorization);
           decode.should.be.equal('email1@wolox.com.ar');
         } catch (err) {
-          console.log(err);
+          err.should.be.an.instanceOf(Error);
         }
       })
       .then(() => done());
@@ -55,7 +55,7 @@ describe('/users/sessions POST', () => {
           try {
             sessionManager.decode(res.headers.authorization);
           } catch (err) {
-            console.log(err);
+            err.should.be.an.instanceOf(Error);
           }
         })
         .then(() => done());
