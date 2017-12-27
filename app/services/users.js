@@ -16,3 +16,14 @@ exports.getOne = user => {
     throw errors.databaseError(err.detail);
   });
 };
+
+exports.getAll = (limit = 20, offset = 0) => {
+  return orm.models.user
+    .findAll({
+      offset,
+      limit
+    })
+    .catch(err => {
+      throw errors.databaseError(err.detail);
+    });
+};

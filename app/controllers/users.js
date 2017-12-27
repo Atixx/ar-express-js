@@ -78,3 +78,19 @@ exports.login = (req, res, next) => {
     }
   });
 };
+
+exports.list = (req, res, next) => {
+  return sessionService
+    .existToken(req.headers[sessionManager.HEADER_NAME])
+    .then(valid => {
+      return userService.getAll().then(u => {
+        // console.log(u);
+        res.status(200);
+        res.send(u);
+        res.end();
+      });
+    })
+    .catch(err => {
+      next(errors.defaultError(err));
+    });
+};
