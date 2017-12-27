@@ -3,8 +3,15 @@ const chai = require('chai'),
   dictum = require('dictum.js'),
   sessionManager = require('./../app/services/sessionManager'),
   sessionService = require('./../app/services/sessions'),
-  should = chai.should(),
-  delay = require('timeout-as-promise');
+  should = chai.should();
+
+const delay = time => {
+  return new Promise(function(fulfill, reject) {
+    setTimeout(function() {
+      fulfill();
+    }, time);
+  });
+};
 
 const successfulLogin = cb => {
   return chai
@@ -17,12 +24,8 @@ describe('/users/sessions POST', () => {
   it('Should successful because user signin twice correctly', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
-      res.should.be.json;
-      res.headers.should.have.property(sessionManager.HEADER_NAME);
       return successfulLogin().then(res2 => {
         res2.should.have.status(201);
-        res2.should.be.json;
-        res2.headers.should.have.property(sessionManager.HEADER_NAME);
         return sessionService
           .getCount(res2.body.email)
           .then(count => {
@@ -35,8 +38,6 @@ describe('/users/sessions POST', () => {
   it('Should successful because user signin and his token are valid', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
-      res.should.be.json;
-      res.headers.should.have.property(sessionManager.HEADER_NAME);
       return sessionService
         .isValid(res.body.email, res.headers.authorization)
         .then(isValid => {
@@ -48,13 +49,12 @@ describe('/users/sessions POST', () => {
   it('Should fail because of invalid token', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
-      res.should.be.json;
-      res.headers.should.have.property(sessionManager.HEADER_NAME);
       delay(1000)
         .then(() => {
           return sessionService.isValid(res.body.email, res.headers.authorization).catch(err => {
             err.should.be.property('statusCode');
             err.statusCode.should.to.equal(400);
+            err.message.should.include('Invalid Token');
           });
         })
         .then(() => done());
@@ -66,8 +66,6 @@ describe('/users/logout POST', () => {
   it('Should successful because user logout correctly', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
-      res.should.be.json;
-      res.headers.should.have.property(sessionManager.HEADER_NAME);
       return sessionService
         .getCount(res.body.email)
         .then(count => {
@@ -91,8 +89,6 @@ describe('/users/logout POST', () => {
   it('Should fail because of invalid token', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
-      res.should.be.json;
-      res.headers.should.have.property(sessionManager.HEADER_NAME);
       return sessionService.getCount(res.body.email).then(count => {
         count.should.to.equal(1);
         delay(1000).then(() => {
@@ -102,6 +98,8 @@ describe('/users/logout POST', () => {
             .send({ email: res.body.email })
             .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
             .catch(err => {
+              err.response.text.should.include(400);
+              err.response.text.should.include('Invalid Token');
               return sessionService.getCount(res.body.email).then(count2 => {
                 count2.should.to.equal(0);
               });
@@ -117,13 +115,9 @@ describe('/users/logout/all POST', () => {
   it('Should fail because of invalid token', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
-      res.should.be.json;
-      res.headers.should.have.property(sessionManager.HEADER_NAME);
       delay(1000).then(() => {
         return successfulLogin().then(res2 => {
           res2.should.have.status(201);
-          res2.should.be.json;
-          res2.headers.should.have.property(sessionManager.HEADER_NAME);
           return sessionService.getCount(res2.body.email).then(count => {
             count.should.to.equal(2);
             return chai
@@ -132,6 +126,8 @@ describe('/users/logout/all POST', () => {
               .send({ email: res.body.email })
               .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
               .catch(err => {
+                err.response.text.should.include(400);
+                err.response.text.should.include('Invalid Token');
                 return sessionService.getCount(res.body.email).then(count2 => {
                   count2.should.to.equal(1);
                 });
@@ -145,13 +141,9 @@ describe('/users/logout/all POST', () => {
   it('Should successful because sessions database is empty', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
-      res.should.be.json;
-      res.headers.should.have.property(sessionManager.HEADER_NAME);
       delay(200).then(() => {
         return successfulLogin().then(res2 => {
           res2.should.have.status(201);
-          res2.should.be.json;
-          res2.headers.should.have.property(sessionManager.HEADER_NAME);
           return sessionService.getCount(res2.body.email).then(count => {
             count.should.to.equal(2);
             return chai
