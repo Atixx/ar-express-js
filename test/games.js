@@ -6,6 +6,14 @@ const chai = require('chai'),
   errors = require('./../app/errors'),
   should = chai.should();
 
+const delay = time => {
+  return new Promise(function(fulfill, reject) {
+    setTimeout(function() {
+      fulfill();
+    }, time);
+  });
+};
+
 const successfulLogin = cb => {
   return chai
     .request(server)
@@ -76,6 +84,37 @@ describe('/games POST', () => {
           err.response.text.should.include('code must be unique');
         })
         .then(() => done());
+    });
+  });
+});
+
+describe('/games GET', () => {
+  it('Should be successful', done => {
+    return successfulLogin().then(res => {
+      res.should.have.status(201);
+      return chai
+        .request(server)
+        .get('/games')
+        .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+        .then(res2 => {
+          res2.should.have.status(200);
+        })
+        .then(() => done());
+    });
+  });
+  it('Should fail because invalid token', done => {
+    return successfulLogin().then(res => {
+      res.should.have.status(201);
+      delay(1000).then(() => {
+        return chai
+          .request(server)
+          .get('/games')
+          .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+          .catch(err => {
+            err.response.should.have.status(401);
+          })
+          .then(() => done());
+      });
     });
   });
 });
