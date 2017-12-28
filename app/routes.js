@@ -1,6 +1,7 @@
 const users = require('./controllers/users');
 const sessions = require('./controllers/sessions');
 const games = require('./controllers/games');
+const matches = require('./controllers/matches');
 const auth = require('./middlewares/auth');
 
 exports.init = app => {
@@ -12,4 +13,5 @@ exports.init = app => {
   app.post('/admin/users', auth.secure, auth.admin, users.createAdmin);
   app.post('/games', auth.secure, auth.admin, games.create);
   app.get('/games', auth.secure, games.list);
+  app.post('/games/:game_id/match', auth.secure, matches.create);
 };
