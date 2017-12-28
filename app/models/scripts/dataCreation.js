@@ -11,7 +11,7 @@ exports.execute = db => {
           lastname: 'lastname1',
           email: 'email1@wolox.com.ar',
           password: hash,
-          admin: YES
+          admin: true
         })
       );
       data.push(
@@ -21,7 +21,7 @@ exports.execute = db => {
           username: 'username2',
           email: 'email2@wolox.com.ar',
           password: hash,
-          admin: NO
+          admin: false
         })
       );
       data.push(
@@ -31,7 +31,7 @@ exports.execute = db => {
           username: 'username3',
           email: 'email3@wolox.com.ar',
           password: hash,
-          admin: NO
+          admin: false
         })
       );
       return Promise.all(data);

@@ -28,3 +28,18 @@ exports.getAll = (limit = 20, page = 0) => {
       throw errors.databaseError(err.detail);
     });
 };
+
+exports.updateAdmin = email => {
+  return orm.models.user
+    .findOne({ where: { email } })
+    .then(u => {
+      u
+        .updateAttributes({
+          admin: true
+        })
+        .then(() => {});
+    })
+    .catch(err => {
+      throw errors.databaseError(err.detail);
+    });
+};

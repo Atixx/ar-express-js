@@ -6,29 +6,11 @@ const userService = require('../services/users');
 const sessionService = require('../services/sessions');
 const sessionManager = require('./../services/sessionManager');
 
-exports.create = (req, res, next) => {
-  const saltRounds = 10;
-  const regexPassword = /^\w{8,}$/;
-  const regexEmail = /.*@wolox.com.ar$/;
+const saltRounds = 10;
+const regexPassword = /^\w{8,}$/;
+const regexEmail = /.*@wolox.com.ar$/;
 
-  const user = req.body
-    ? {
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        password: req.body.password,
-        email: req.body.email,
-        admin: NO
-      }
-    : {};
-
-  if (!user.password.match(regexPassword)) {
-    return next(errors.invalidPasswordFormat);
-  }
-
-  if (!user.email.match(regexEmail)) {
-    return next(errors.invalidEmail);
-  }
-
+exports.createUser = (user, res, next) => {
   bcrypt
     .hash(user.password, saltRounds)
     .then(hash => {
@@ -41,6 +23,58 @@ exports.create = (req, res, next) => {
     })
     .catch(err => {
       next(errors.defaultError(err));
+    });
+};
+
+exports.createReg = (req, res, next) => {
+  const user = req.body
+    ? {
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        password: req.body.password,
+        email: req.body.email,
+        admin: false
+      }
+    : {};
+
+  if (!user.password.match(regexPassword)) {
+    return next(errors.invalidPasswordFormat);
+  }
+
+  if (!user.email.match(regexEmail)) {
+    return next(errors.invalidEmail);
+  }
+
+  return exports.createUser(user, res, next);
+};
+
+exports.createAdmin = (req, res, next) => {
+  const user = req.body
+    ? {
+        firstname: req.body.admin.firstname,
+        lastname: req.body.admin.lastname,
+        password: req.body.admin.password,
+        email: req.body.admin.email,
+        admin: true
+      }
+    : {};
+
+  if (!user.password.match(regexPassword)) {
+    return next(errors.invalidPasswordFormat);
+  }
+
+  if (!user.email.match(regexEmail)) {
+    return next(errors.invalidEmail);
+  }
+
+  return userService
+    .updateAdmin(user.email)
+    .then(() => {
+      res.status(200);
+      res.end();
+    })
+    .catch(() => {
+      return exports.createUser(user, res, next);
     });
 };
 
