@@ -34,6 +34,13 @@ exports.execute = db => {
           admin: false
         })
       );
+      data.push(
+        db.models.game.create({
+          name: 'game1',
+          code: 'code1',
+          score: 10
+        })
+      );
       return Promise.all(data);
     })
     .catch(bcryptErr => {
