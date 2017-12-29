@@ -6,9 +6,9 @@ const matchService = require('../services/matches');
 exports.create = (req, res, next) => {
   const match = req.body
     ? {
-        user_id: req.body.match.user_id,
+        user_id: req.body.user_id,
         game_id: req.params.game_id,
-        hits: req.body.match.hits
+        hits: req.body.hits
       }
     : {};
 
@@ -25,7 +25,7 @@ exports.create = (req, res, next) => {
 
 exports.list = (req, res, next) => {
   return matchService
-    .getAll()
+    .getMatches(req.params.game_id)
     .then(u => {
       res.status(200);
       res.send(u);

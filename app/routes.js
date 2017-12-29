@@ -14,4 +14,5 @@ exports.init = app => {
   app.post('/games', auth.secure, auth.admin, games.create);
   app.get('/games', auth.secure, games.list);
   app.post('/games/:game_id/match', auth.secure, matches.create);
+  app.get('/games/:game_id/match', auth.secure, matches.list);
 };
