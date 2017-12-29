@@ -1,18 +1,12 @@
 const errors = require('./../errors');
 
-exports.check = (modelParameters, reqParameters) => {
-  const missingParameters = [];
-  for (let i = 0; i < modelParameters.length; i++) {
-    const param = modelParameters[i];
+exports.check = (modelParameters, reqBody) => {
+  const reqParameters = Object.keys(reqBody);
+
+  return modelParameters.reduce((missingParameters, param) => {
     if (!reqParameters.includes(param)) {
       missingParameters.push(param);
     }
-  }
-  return new Promise(function(fulfill, reject) {
-    if (missingParameters.length !== 0) {
-      reject(missingParameters);
-    } else {
-      fulfill();
-    }
-  });
+    return missingParameters;
+  }, []);
 };
