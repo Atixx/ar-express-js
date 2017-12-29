@@ -86,6 +86,28 @@ describe('/games POST', () => {
         .then(() => done());
     });
   });
+  it('Should fail because of invalid token', done => {
+    return successfulLogin().then(res => {
+      delay(1000).then(() => {
+        return chai
+          .request(server)
+          .post('/games')
+          .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+          .send({
+            email: 'email1@wolox.com.ar',
+            game: {
+              name: 'game2',
+              code: 'code1',
+              score: 10
+            }
+          })
+          .catch(err => {
+            err.should.have.status(401);
+          })
+          .then(() => done());
+      });
+    });
+  });
 });
 
 describe('/games GET', () => {
