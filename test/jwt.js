@@ -11,5 +11,12 @@ describe('encode and decode by jwt', () => {
     dec.should.be.property('name');
     dec.name.should.be.equal('Alan');
     done();
+    // sessionManager
+    //   .decode(enc)
+    //   .then(res => {
+    //     res.should.be.property('name');
+    //     res.name.should.be.equal('Alan');
+    //   })
+    //   .then(() => done());
   });
 });

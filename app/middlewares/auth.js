@@ -24,6 +24,18 @@ exports.secure = (req, res, next) => {
         res.end();
       });
     }
+    // sessionManager
+    //   .decode(auth)
+    //   .then(() => {
+    //     req.email = email;
+    //     next();
+    //   })
+    //   .catch(err => {
+    //     sessionService.delete(email, auth).then(() => {
+    //       res.status(401);
+    //       res.end();
+    //     });
+    //   });
   } else {
     res.status(401);
     res.end();
