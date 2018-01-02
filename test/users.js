@@ -266,10 +266,7 @@ describe('Admin test', () => {
             dictum.chai(res2);
             return orm.models.user
               .findOne({ where: { email: 'email2@wolox.com.ar' } })
-              .then(u => u.dataValues.admin.should.be.equal(true))
-              .catch(err => {
-                throw errors.databaseError(err.detail);
-              });
+              .then(u => u.dataValues.admin.should.be.equal(true));
           })
           .then(() => done());
       });

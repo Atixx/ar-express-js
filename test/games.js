@@ -6,14 +6,6 @@ const chai = require('chai'),
   errors = require('./../app/errors'),
   should = chai.should();
 
-const delay = time => {
-  return new Promise(function(fulfill, reject) {
-    setTimeout(function() {
-      fulfill();
-    }, time);
-  });
-};
-
 const successfulLogin = cb => {
   return chai
     .request(server)
@@ -59,7 +51,7 @@ describe('/games POST', () => {
         .catch(err => {
           err.should.have.status(400);
           err.response.should.be.json;
-          err.response.text.should.include('name cannot be null');
+          err.response.text.should.include('Missing parameters: name');
         })
         .then(() => done());
     });
@@ -88,7 +80,7 @@ describe('/games POST', () => {
   });
   it('Should fail because of invalid token', done => {
     return successfulLogin().then(res => {
-      delay(1000).then(() => {
+      setTimeout(() => {
         return chai
           .request(server)
           .post('/games')
@@ -106,7 +98,7 @@ describe('/games POST', () => {
             err.response.res.statusMessage.should.be.equal('Unauthorized');
           })
           .then(() => done());
-      });
+      }, 1000);
     });
   });
 });
@@ -128,7 +120,7 @@ describe('/games GET', () => {
   it('Should fail because invalid token', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
-      delay(1000).then(() => {
+      setTimeout(() => {
         return chai
           .request(server)
           .get('/games')
@@ -138,7 +130,7 @@ describe('/games GET', () => {
             err.response.res.statusMessage.should.be.equal('Unauthorized');
           })
           .then(() => done());
-      });
+      }, 1000);
     });
   });
 });
