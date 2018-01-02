@@ -2,6 +2,7 @@ const chai = require('chai'),
   server = require('./../app'),
   dictum = require('dictum.js'),
   sessionManager = require('./../app/services/sessionManager'),
+  sessionService = require('./../app/services/sessions'),
   orm = require('./../app/orm'),
   errors = require('./../app/errors'),
   should = chai.should();
@@ -65,6 +66,20 @@ describe('Regular users test', () => {
           dictum.chai(res);
         })
         .then(() => done());
+    });
+    it('Should successful because user signin twice correctly', done => {
+      return successfulLogin().then(res => {
+        res.should.have.status(201);
+        return successfulLogin().then(res2 => {
+          res2.should.have.status(201);
+          return sessionService
+            .getCount(res2.body.email)
+            .then(count => {
+              count.should.to.equal(2);
+            })
+            .then(() => done());
+        });
+      });
     });
   });
   describe('/users POST', () => {
@@ -220,6 +235,104 @@ describe('Regular users test', () => {
         .then(() => done());
     });
   });
+  describe('/users/logout POST', () => {
+    it('Should successful because user logout correctly', done => {
+      return successfulLogin().then(res => {
+        res.should.have.status(201);
+        return sessionService
+          .getCount(res.body.email)
+          .then(count => {
+            count.should.to.equal(1);
+          })
+          .then(() => {
+            return chai
+              .request(server)
+              .post('/users/logout')
+              .send({ email: res.body.email })
+              .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+              .then(res2 => {
+                return sessionService.getCount(res.body.email).then(count2 => {
+                  count2.should.to.equal(0);
+                });
+              })
+              .then(() => done());
+          });
+      });
+    });
+    it('Should fail because of invalid token', done => {
+      return successfulLogin().then(res => {
+        res.should.have.status(201);
+        return sessionService.getCount(res.body.email).then(count => {
+          count.should.to.equal(1);
+          setTimeout(() => {
+            return chai
+              .request(server)
+              .post('/users/logout')
+              .send({ email: res.body.email })
+              .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+              .catch(err => {
+                err.response.should.have.status(401);
+                return sessionService.getCount(res.body.email).then(count2 => {
+                  count2.should.to.equal(0);
+                });
+              })
+              .then(() => done());
+          }, 1000);
+        });
+      });
+    });
+  });
+  describe('/users/logout/all POST', () => {
+    it('Should fail because of invalid token', done => {
+      return successfulLogin().then(res => {
+        res.should.have.status(201);
+        setTimeout(() => {
+          return successfulLogin().then(res2 => {
+            res2.should.have.status(201);
+            return sessionService.getCount(res2.body.email).then(count => {
+              count.should.to.equal(2);
+              return chai
+                .request(server)
+                .post('/users/logout/all')
+                .send({ email: res.body.email })
+                .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+                .catch(err => {
+                  err.response.should.have.status(401);
+                  return sessionService.getCount(res.body.email).then(count2 => {
+                    count2.should.to.equal(1);
+                  });
+                })
+                .then(() => done());
+            });
+          });
+        }, 1000);
+      });
+    });
+    // it('Should successful because sessions database is empty', done => {
+    //   return successfulLogin().then(res => {
+    //     res.should.have.status(201);
+    //     setTimeout(() => {
+    //       return successfulLogin().then(res2 => {
+    //         res2.should.have.status(201);
+    //         return sessionService.getCount(res2.body.email).then(count => {
+    //           count.should.to.equal(2);
+    //           return chai
+    //             .request(server)
+    //             .post('/users/logout/all')
+    //             .send({ email: res.body.email })
+    //             .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+    //             .then(res3 => {
+    //               return sessionService.getCount(res.body.email).then(count2 => {
+    //                 count2.should.to.equal(0);
+    //               });
+    //             })
+    //             .then(() => done());
+    //         });
+    //       });
+    //     }, 200);
+    //   });
+    // });
+  });
 });
 
 describe('Admin test', () => {
@@ -337,6 +450,7 @@ describe('Users list test', () => {
     it('Should fail because invalid token', done => {
       return successfulLogin().then(res => {
         res.should.have.status(201);
+        // setTimeout(() => {}, 1000);
         delay(1000).then(() => {
           return chai
             .request(server)
