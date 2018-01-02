@@ -18,6 +18,11 @@ exports.notFound = {
   message: 'Not found'
 };
 
+exports.invalidToken = {
+  statusCode: 400,
+  message: 'Invalid Token'
+};
+
 exports.defaultError = message => {
   return {
     statusCode: 400,

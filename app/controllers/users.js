@@ -3,6 +3,7 @@
 const bcrypt = require('bcrypt');
 const errors = require('../errors');
 const userService = require('../services/users');
+const sessionService = require('../services/sessions');
 const sessionManager = require('./../services/sessionManager');
 const parametersManager = require('./../services/parametersManager');
 
@@ -67,11 +68,21 @@ exports.login = (req, res, next) => {
       if (u) {
         bcrypt.compare(user.password, u.password).then(isValid => {
           if (isValid) {
-            const auth = sessionManager.encode({ username: u.username });
+            const auth = sessionManager.encode(u.email, 0.5);
 
-            res.status(201);
-            res.set(sessionManager.HEADER_NAME, auth);
-            res.send(u);
+            const session = {
+              email: u.email,
+              token: auth
+            };
+
+            return sessionService
+              .create(session)
+              .then(() => {
+                res.status(201);
+                res.set(sessionManager.HEADER_NAME, auth);
+                res.send(u);
+              })
+              .catch(errors.databaseError);
           } else {
             next(errors.invalidUser);
           }
