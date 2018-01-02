@@ -17,31 +17,31 @@ exports.create = (req, res, next) => {
       res.status(201);
       res.end();
     })
-    .catch(err => {
-      next(errors.defaultError(err));
-    });
+    .catch(next);
 };
 
 exports.logout = (req, res, next) => {
   return sessionService
-    .delete(req.body.email, req.headers.authorization)
+    .delete(req.headers.authorization)
     .then(() => {
       res.status(201);
       res.end();
     })
-    .catch(err => {
-      next(errors.defaultError(err));
-    });
+    .catch(next);
 };
 
 exports.logoutAll = (req, res, next) => {
-  return sessionService
-    .deleteAll(req.body.email, req.headers.authorization)
-    .then(() => {
-      res.status(201);
-      res.end();
-    })
-    .catch(err => {
-      next(errors.defaultError(err));
-    });
+  if (req.body.email) {
+    return sessionService
+      .getOne(req.body.email, req.headers.authorization)
+      .then(u => {
+        return sessionService.deleteAll(req.body.email).then(() => {
+          res.status(201);
+          res.end();
+        });
+      })
+      .catch(next);
+  } else {
+    next(errors.missingParameters(['email']));
+  }
 };
