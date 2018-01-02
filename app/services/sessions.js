@@ -39,8 +39,8 @@ exports.getCount = email => {
   });
 };
 
-exports.delete = (e, t) => {
-  return orm.models.sessions.destroy({ where: { email: e, token: t } }).catch(err => {
+exports.delete = t => {
+  return orm.models.sessions.destroy({ where: { token: t } }).catch(err => {
     throw errors.databaseError(err.detail);
   });
 };

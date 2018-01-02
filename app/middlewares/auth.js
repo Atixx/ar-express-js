@@ -3,42 +3,50 @@ const orm = require('./../orm');
 const errors = require('./../errors');
 const sessionService = require('./../services/sessions');
 
-exports.secure = (req, res, next) => {
-  const auth = req.headers[sessionManager.HEADER_NAME];
-  const email = req.body.email;
-
-  if (auth) {
-    try {
-      if (sessionManager.decode(auth)) {
-        req.email = email;
-        next();
-      } else {
-        sessionService.delete(email, auth).then(() => {
-          res.status(401);
-          res.end();
-        });
-      }
-    } catch (err) {
-      sessionService.delete(email, auth).then(() => {
+exports.secure = (email, auth, req, res, next) => {
+  try {
+    if (sessionManager.decode(auth)) {
+      req.email = email;
+      next();
+    } else {
+      sessionService.delete(auth).then(() => {
         res.status(401);
         res.end();
       });
     }
-    // sessionManager
-    //   .decode(auth)
-    //   .then(() => {
-    //     req.email = email;
-    //     next();
-    //   })
-    //   .catch(err => {
-    //     sessionService.delete(email, auth).then(() => {
-    //       res.status(401);
-    //       res.end();
-    //     });
-    //   });
+  } catch (err) {
+    sessionService.delete(auth).then(() => {
+      res.status(401);
+      res.end();
+    });
+  }
+};
+
+exports.securePost = (req, res, next) => {
+  const auth = req.headers[sessionManager.HEADER_NAME];
+  const email = req.body.email;
+
+  if (auth && email) {
+    exports.secure(email, auth, req, res, next);
   } else {
-    res.status(401);
-    res.end();
+    if (!auth) {
+      next(errors.missingParameters(['token']));
+    } else {
+      next(errors.missingParameters(['email']));
+    }
+  }
+};
+
+exports.secureGet = (req, res, next) => {
+  const auth = req.headers[sessionManager.HEADER_NAME];
+  const email = null;
+
+  if (auth) {
+    exports.secure(email, auth, req, res, next);
+  } else {
+    if (!auth) {
+      next(errors.missingParameters(['token']));
+    }
   }
 };
 

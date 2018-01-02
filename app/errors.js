@@ -43,3 +43,15 @@ exports.databaseError = message => {
     message
   };
 };
+
+exports.missingParameters = parameters => {
+  let string = ``;
+  parameters.forEach(param => {
+    string = `${string} ${param}`;
+  });
+
+  return {
+    statusCode: 400,
+    message: `Missing parameters:${string}`
+  };
+};
