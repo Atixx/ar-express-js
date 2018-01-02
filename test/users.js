@@ -71,18 +71,6 @@ describe('users test', () => {
         });
       });
     });
-    it('Should successful because user signin and his token are valid', done => {
-      return successfulLogin()
-        .then(res => {
-          try {
-            const decode = sessionManager.decode(res.headers.authorization);
-            decode.should.be.equal('email1@wolox.com.ar');
-          } catch (err) {
-            err.should.be.an.instanceOf(Error);
-          }
-        })
-        .then(() => done());
-    });
   });
   describe('/users POST', () => {
     it('should be successful', done => {
