@@ -103,6 +103,7 @@ describe('/games POST', () => {
           })
           .catch(err => {
             err.should.have.status(401);
+            err.response.res.statusMessage.should.be.equal('Unauthorized');
           })
           .then(() => done());
       });
@@ -134,6 +135,7 @@ describe('/games GET', () => {
           .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
           .catch(err => {
             err.response.should.have.status(401);
+            err.response.res.statusMessage.should.be.equal('Unauthorized');
           })
           .then(() => done());
       });
