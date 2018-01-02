@@ -282,7 +282,6 @@ describe('users test', () => {
               .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
               .catch(err => {
                 err.response.should.have.status(401);
-                err.response.error.should.include('cannot POST /users/logout');
                 return sessionService.getCount(res.body.email).then(count2 => {
                   count2.should.to.equal(0);
                 });
@@ -350,7 +349,6 @@ describe('users test', () => {
                 .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
                 .catch(err => {
                   err.response.should.have.status(401);
-                  err.response.error.should.include('cannot POST /users/logout/all');
                   return sessionService.getCount(res.body.email).then(count2 => {
                     count2.should.to.equal(1);
                   });

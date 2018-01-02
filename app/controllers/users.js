@@ -68,7 +68,7 @@ exports.login = (req, res, next) => {
       if (u) {
         bcrypt.compare(user.password, u.password).then(isValid => {
           if (isValid) {
-            const auth = sessionManager.encode({ username: u.username });
+            const auth = sessionManager.encode(u.email, 0.5);
 
             const session = {
               email: u.email,
