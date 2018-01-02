@@ -7,7 +7,7 @@ exports.secure = (req, res, next) => {
   const auth = req.headers[sessionManager.HEADER_NAME];
   const email = req.body.email;
 
-  if (auth) {
+  if (auth && email) {
     try {
       if (sessionManager.decode(auth)) {
         req.email = email;
@@ -25,7 +25,10 @@ exports.secure = (req, res, next) => {
       });
     }
   } else {
-    res.status(401);
-    res.end();
+    if (!auth) {
+      next(errors.missingParameters(['token']));
+    } else {
+      next(errors.missingParameters(['email']));
+    }
   }
 };

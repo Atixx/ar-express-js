@@ -17,9 +17,7 @@ exports.create = (req, res, next) => {
       res.status(201);
       res.end();
     })
-    .catch(err => {
-      next(errors.defaultError(err));
-    });
+    .catch(next);
 };
 
 exports.logout = (req, res, next) => {
@@ -29,9 +27,7 @@ exports.logout = (req, res, next) => {
       res.status(201);
       res.end();
     })
-    .catch(err => {
-      next(errors.defaultError(err));
-    });
+    .catch(next);
 };
 
 exports.logoutAll = (req, res, next) => {
@@ -41,7 +37,5 @@ exports.logoutAll = (req, res, next) => {
       res.status(201);
       res.end();
     })
-    .catch(err => {
-      next(errors.defaultError(err));
-    });
+    .catch(next);
 };
