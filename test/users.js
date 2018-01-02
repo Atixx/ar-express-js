@@ -313,26 +313,6 @@ describe('Regular users test', () => {
         });
       });
     });
-    it('Should fail because of email is missing', done => {
-      return successfulLogin().then(res => {
-        res.should.have.status(201);
-        return sessionService.getCount(res.body.email).then(count => {
-          count.should.to.equal(1);
-          return chai
-            .request(server)
-            .post('/users/logout')
-            .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
-            .catch(err => {
-              err.should.have.status(400);
-              err.response.text.should.include('Missing parameters: email');
-              return sessionService.getCount(res.body.email).then(count2 => {
-                count2.should.to.equal(1);
-              });
-            })
-            .then(() => done());
-        });
-      });
-    });
   });
 
   describe('/users/logout/all POST', () => {
@@ -375,6 +355,29 @@ describe('Regular users test', () => {
               .catch(err => {
                 err.should.have.status(400);
                 err.response.text.should.include('Missing parameters: token');
+                return sessionService.getCount(res.body.email).then(count2 => {
+                  count2.should.to.equal(2);
+                });
+              })
+              .then(() => done());
+          });
+        });
+      });
+    });
+    it('Should fail because of email is missing', done => {
+      return successfulLogin().then(res => {
+        res.should.have.status(201);
+        return successfulLogin().then(res2 => {
+          res2.should.have.status(201);
+          return sessionService.getCount(res2.body.email).then(count => {
+            count.should.to.equal(2);
+            return chai
+              .request(server)
+              .post('/users/logout/all')
+              .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+              .catch(err => {
+                err.should.have.status(400);
+                err.response.text.should.include('Missing parameters: email');
                 return sessionService.getCount(res.body.email).then(count2 => {
                   count2.should.to.equal(2);
                 });

@@ -50,3 +50,9 @@ exports.deleteAll = e => {
     throw errors.databaseError(err.detail);
   });
 };
+
+exports.getOne = (e, t) => {
+  return orm.models.sessions.findOne({ where: { email: t, token: t } }).catch(err => {
+    throw errors.databaseError(err.detail);
+  });
+};

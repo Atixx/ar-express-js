@@ -31,11 +31,17 @@ exports.logout = (req, res, next) => {
 };
 
 exports.logoutAll = (req, res, next) => {
-  return sessionService
-    .deleteAll(req.body.email)
-    .then(() => {
-      res.status(201);
-      res.end();
-    })
-    .catch(next);
+  if (req.body.email) {
+    return sessionService
+      .getOne(req.body.email, req.headers.authorization)
+      .then(u => {
+        return sessionService.deleteAll(req.body.email).then(() => {
+          res.status(201);
+          res.end();
+        });
+      })
+      .catch(next);
+  } else {
+    next(errors.missingParameters(['email']));
+  }
 };
