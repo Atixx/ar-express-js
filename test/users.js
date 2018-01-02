@@ -308,30 +308,28 @@ describe('Regular users test', () => {
         }, 1000);
       });
     });
-    // it('Should successful because sessions database is empty', done => {
-    //   return successfulLogin().then(res => {
-    //     res.should.have.status(201);
-    //     setTimeout(() => {
-    //       return successfulLogin().then(res2 => {
-    //         res2.should.have.status(201);
-    //         return sessionService.getCount(res2.body.email).then(count => {
-    //           count.should.to.equal(2);
-    //           return chai
-    //             .request(server)
-    //             .post('/users/logout/all')
-    //             .send({ email: res.body.email })
-    //             .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
-    //             .then(res3 => {
-    //               return sessionService.getCount(res.body.email).then(count2 => {
-    //                 count2.should.to.equal(0);
-    //               });
-    //             })
-    //             .then(() => done());
-    //         });
-    //       });
-    //     }, 200);
-    //   });
-    // });
+    it('Should successful because sessions database is empty', done => {
+      return successfulLogin().then(res => {
+        res.should.have.status(201);
+        return successfulLogin().then(res2 => {
+          res2.should.have.status(201);
+          return sessionService.getCount(res2.body.email).then(count => {
+            count.should.to.equal(2);
+            return chai
+              .request(server)
+              .post('/users/logout/all')
+              .send({ email: res.body.email })
+              .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+              .then(res3 => {
+                return sessionService.getCount(res.body.email).then(count2 => {
+                  count2.should.to.equal(0);
+                });
+              })
+              .then(() => done());
+          });
+        });
+      });
+    });
   });
 });
 
@@ -379,10 +377,7 @@ describe('Admin test', () => {
             dictum.chai(res2);
             return orm.models.user
               .findOne({ where: { email: 'email2@wolox.com.ar' } })
-              .then(u => u.dataValues.admin.should.be.equal(true))
-              .catch(err => {
-                throw errors.databaseError(err.detail);
-              });
+              .then(u => u.dataValues.admin.should.be.equal(true));
           })
           .then(() => done());
       });
@@ -450,8 +445,7 @@ describe('Users list test', () => {
     it('Should fail because invalid token', done => {
       return successfulLogin().then(res => {
         res.should.have.status(201);
-        // setTimeout(() => {}, 1000);
-        delay(1000).then(() => {
+        setTimeout(() => {
           return chai
             .request(server)
             .get('/users')
@@ -460,7 +454,7 @@ describe('Users list test', () => {
               err.response.should.have.status(401);
             })
             .then(() => done());
-        });
+        }, 1000);
       });
     });
   });
