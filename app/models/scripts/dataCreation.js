@@ -17,6 +17,7 @@ exports.execute = db => {
         db.models.user.create({
           firstname: 'firstname2',
           lastname: 'lastname2',
+          username: 'username2',
           email: 'email2@wolox.com.ar',
           password: hash
         })
@@ -25,6 +26,7 @@ exports.execute = db => {
         db.models.user.create({
           firstname: 'firstname3',
           lastname: 'lastname3',
+          username: 'username3',
           email: 'email3@wolox.com.ar',
           password: hash
         })

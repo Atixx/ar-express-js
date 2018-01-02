@@ -5,6 +5,72 @@ const chai = require('chai'),
   should = chai.should();
 
 describe('users test', () => {
+  describe('/users/sessions POST', () => {
+    it('should fail because of invalid email', done => {
+      chai
+        .request(server)
+        .post('/users/sessions')
+        .send({ email: 'invalid', password: '12345678' })
+        .catch(err => {
+          err.should.have.status(400);
+          err.response.should.be.json;
+          err.response.body.should.have.property('error');
+          err.response.text.should.include('Invalid email or password');
+        })
+        .then(() => done());
+    });
+    it('should fail because of invalid password', done => {
+      chai
+        .request(server)
+        .post('/users/sessions')
+        .send({ email: 'email1@wolox.com.ar', password: '12345679' })
+        .catch(err => {
+          err.should.have.status(400);
+          err.response.should.be.json;
+          err.response.body.should.have.property('error');
+          err.response.text.should.include('Invalid email or password');
+        })
+        .then(() => done());
+    });
+    it('Should be successful', done => {
+      chai
+        .request(server)
+        .post('/users/sessions')
+        .send({ email: 'email1@wolox.com.ar', password: '12345678' })
+        .then(res => {
+          res.should.have.status(201);
+          res.should.be.json;
+          res.body.should.have.property('firstname');
+          res.body.should.have.property('lastname');
+          res.body.should.have.property('email');
+          res.body.should.have.property('password');
+          res.headers.should.have.property(sessionManager.HEADER_NAME);
+          dictum.chai(res);
+        })
+        .then(() => done());
+    });
+    it('should fail because email is missing', done => {
+      return chai
+        .request(server)
+        .post('/users/sessions')
+        .send({ password: '12345679' })
+        .catch(err => {
+          err.should.have.status(400);
+          err.response.text.should.include('Missing parameters: email');
+        })
+        .then(() => done());
+    });
+    it('should fail because email and password is missing', done => {
+      return chai
+        .request(server)
+        .post('/users/sessions')
+        .catch(err => {
+          err.should.have.status(400);
+          err.response.text.should.include('Missing parameters: password email');
+        })
+        .then(() => done());
+    });
+  });
   describe('/users POST', () => {
     it('should be successful', done => {
       chai
@@ -33,8 +99,7 @@ describe('users test', () => {
         })
         .catch(err => {
           err.should.have.status(400);
-          err.response.should.be.json;
-          err.response.text.should.include('firstname cannot be null');
+          err.response.text.should.include('Missing parameters: firstname');
         })
         .then(() => done());
     });
