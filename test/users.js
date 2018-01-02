@@ -282,12 +282,53 @@ describe('users test', () => {
               .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
               .catch(err => {
                 err.response.should.have.status(401);
+                err.response.error.should.include('cannot POST /users/logout');
                 return sessionService.getCount(res.body.email).then(count2 => {
                   count2.should.to.equal(0);
                 });
               })
               .then(() => done());
           }, 1000);
+        });
+      });
+    });
+    it('Should fail because of token is missing', done => {
+      return successfulLogin().then(res => {
+        res.should.have.status(201);
+        return sessionService.getCount(res.body.email).then(count => {
+          count.should.to.equal(1);
+          return chai
+            .request(server)
+            .post('/users/logout')
+            .send({ email: res.body.email })
+            .catch(err => {
+              err.should.have.status(400);
+              err.response.text.should.include('Missing parameters: token');
+              return sessionService.getCount(res.body.email).then(count2 => {
+                count2.should.to.equal(1);
+              });
+            })
+            .then(() => done());
+        });
+      });
+    });
+    it('Should fail because of email is missing', done => {
+      return successfulLogin().then(res => {
+        res.should.have.status(201);
+        return sessionService.getCount(res.body.email).then(count => {
+          count.should.to.equal(1);
+          return chai
+            .request(server)
+            .post('/users/logout')
+            .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+            .catch(err => {
+              err.should.have.status(400);
+              err.response.text.should.include('Missing parameters: email');
+              return sessionService.getCount(res.body.email).then(count2 => {
+                count2.should.to.equal(1);
+              });
+            })
+            .then(() => done());
         });
       });
     });
@@ -309,6 +350,7 @@ describe('users test', () => {
                 .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
                 .catch(err => {
                   err.response.should.have.status(401);
+                  err.response.error.should.include('cannot POST /users/logout/all');
                   return sessionService.getCount(res.body.email).then(count2 => {
                     count2.should.to.equal(1);
                   });
@@ -317,6 +359,29 @@ describe('users test', () => {
             });
           });
         }, 1000);
+      });
+    });
+    it('Should fail because of token is missing', done => {
+      return successfulLogin().then(res => {
+        res.should.have.status(201);
+        return successfulLogin().then(res2 => {
+          res2.should.have.status(201);
+          return sessionService.getCount(res2.body.email).then(count => {
+            count.should.to.equal(2);
+            return chai
+              .request(server)
+              .post('/users/logout/all')
+              .send({ email: res.body.email })
+              .catch(err => {
+                err.should.have.status(400);
+                err.response.text.should.include('Missing parameters: token');
+                return sessionService.getCount(res.body.email).then(count2 => {
+                  count2.should.to.equal(2);
+                });
+              })
+              .then(() => done());
+          });
+        });
       });
     });
     it('Should successful because sessions database is empty', done => {
