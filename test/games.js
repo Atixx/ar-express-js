@@ -59,7 +59,7 @@ describe('/games POST', () => {
         .catch(err => {
           err.should.have.status(400);
           err.response.should.be.json;
-          err.response.text.should.include('name cannot be null');
+          err.response.text.should.include('Missing parameters: name');
         })
         .then(() => done());
     });

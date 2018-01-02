@@ -2,25 +2,41 @@
 
 const errors = require('../errors');
 const matchService = require('../services/matches');
+const gameService = require('../services/games');
+const parametersManager = require('./../services/parametersManager');
+
+const paramsCreate = ['user_id', 'hits'];
 
 exports.create = (req, res, next) => {
-  const match = req.body
-    ? {
-        user_id: req.body.user_id,
-        game_id: req.params.game_id,
-        hits: req.body.hits
-      }
-    : {};
+  const missingParameters = parametersManager.check(paramsCreate, req.body);
 
-  return matchService
-    .create(match)
-    .then(u => {
-      res.status(201);
-      res.end();
-    })
-    .catch(err => {
-      next(errors.defaultError(err));
-    });
+  if (missingParameters.length === 0) {
+    const match = req.body
+      ? {
+          user_id: req.body.user_id,
+          game_id: req.params.game_id,
+          hits: req.body.hits
+        }
+      : {};
+
+    return gameService
+      .checkGame(match.game_id)
+      .then(u => {
+        if (u) {
+          return matchService.create(match).then(v => {
+            res.status(201);
+            res.end();
+          });
+        } else {
+          next(errors.defaultError(errors.notFound));
+        }
+      })
+      .catch(err => {
+        next(errors.defaultError(err));
+      });
+  } else {
+    return next(errors.missingParameters(missingParameters));
+  }
 };
 
 exports.list = (req, res, next) => {
