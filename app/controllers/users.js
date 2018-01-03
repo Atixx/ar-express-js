@@ -145,7 +145,5 @@ exports.list = (req, res, next) => {
       res.send(u);
       res.end();
     })
-    .catch(err => {
-      next(errors.defaultError(err));
-    });
+    .catch(next);
 };

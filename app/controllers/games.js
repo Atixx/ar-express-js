@@ -24,9 +24,7 @@ exports.create = (req, res, next) => {
         res.status(201);
         res.end();
       })
-      .catch(err => {
-        next(errors.defaultError(err));
-      });
+      .catch(next);
   } else {
     return next(errors.missingParameters(missingParameters));
   }
@@ -39,7 +37,5 @@ exports.list = (req, res, next) => {
       res.status(200);
       res.send(u);
     })
-    .catch(err => {
-      next(errors.defaultError(err));
-    });
+    .catch(next);
 };
