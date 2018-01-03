@@ -10,7 +10,7 @@ const paramsCreate = ['user_id', 'hits'];
 exports.create = (req, res, next) => {
   const missingParameters = parametersManager.check(paramsCreate, req.body);
 
-  if (missingParameters.length === 0) {
+  if (!missingParameters.length) {
     const match = req.body
       ? {
           user_id: req.body.user_id,
