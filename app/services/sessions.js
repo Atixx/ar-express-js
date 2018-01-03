@@ -8,20 +8,6 @@ exports.create = session => {
   });
 };
 
-exports.isValid = (e, t) => {
-  return orm.models.sessions
-    .findOne({ where: { email: e, token: t } })
-    .then(u => {
-      sessionManager.decode(u.dataValues.token);
-      return true;
-    })
-    .catch(err => {
-      return exports.delete(e, t).then(() => {
-        throw errors.invalidToken;
-      });
-    });
-};
-
 exports.existToken = t => {
   return orm.models.sessions
     .findOne({ where: { token: t } })
@@ -39,14 +25,20 @@ exports.getCount = email => {
   });
 };
 
-exports.delete = (e, t) => {
-  return orm.models.sessions.destroy({ where: { email: e, token: t } }).catch(err => {
+exports.delete = t => {
+  return orm.models.sessions.destroy({ where: { token: t } }).catch(err => {
     throw errors.databaseError(err.detail);
   });
 };
 
 exports.deleteAll = e => {
   return orm.models.sessions.destroy({ where: { email: e } }).catch(err => {
+    throw errors.databaseError(err.detail);
+  });
+};
+
+exports.getOne = (e, t) => {
+  return orm.models.sessions.findOne({ where: { email: t, token: t } }).catch(err => {
     throw errors.databaseError(err.detail);
   });
 };

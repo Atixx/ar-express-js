@@ -5,28 +5,24 @@ const sessionService = require('./../services/sessions');
 
 exports.secure = (req, res, next) => {
   const auth = req.headers[sessionManager.HEADER_NAME];
-  const email = req.body.email;
-
   if (auth) {
     try {
       if (sessionManager.decode(auth)) {
-        req.email = email;
         next();
       } else {
-        sessionService.delete(email, auth).then(() => {
+        sessionService.delete(auth).then(() => {
           res.status(401);
           res.end();
         });
       }
     } catch (err) {
-      sessionService.delete(email, auth).then(() => {
+      sessionService.delete(auth).then(() => {
         res.status(401);
         res.end();
       });
     }
   } else {
-    res.status(401);
-    res.end();
+    next(errors.missingParameters(['token']));
   }
 };
 
