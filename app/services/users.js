@@ -33,11 +33,9 @@ exports.updateAdmin = email => {
   return exports
     .getByEmail(email)
     .then(u => {
-      u
-        .updateAttributes({
-          admin: true
-        })
-        .then(() => {});
+      u.updateAttributes({
+        admin: true
+      });
     })
     .catch(err => {
       throw errors.databaseError(err.detail);
