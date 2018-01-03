@@ -422,13 +422,10 @@ describe('Admin test', () => {
           .request(server)
           .post('/admin/users')
           .send({
-            email: 'email1@wolox.com.ar',
-            admin: {
-              firstname: 'Alan',
-              lastname: 'Rinaldi',
-              email: 'alan.rinaldi@wolox.com.ar',
-              password: '12345678'
-            }
+            firstname: 'Alan',
+            lastname: 'Rinaldi',
+            email: 'alan.rinaldi@wolox.com.ar',
+            password: '12345678'
           })
           .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
           .then(res2 => {
@@ -444,13 +441,10 @@ describe('Admin test', () => {
           .request(server)
           .post('/admin/users')
           .send({
-            email: 'email1@wolox.com.ar',
-            admin: {
-              firstname: 'Alan',
-              lastname: 'Rinaldi',
-              email: 'email2@wolox.com.ar',
-              password: '12345678'
-            }
+            firstname: 'Alan',
+            lastname: 'Rinaldi',
+            email: 'email2@wolox.com.ar',
+            password: '12345678'
           })
           .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
           .then(res2 => {
@@ -458,9 +452,9 @@ describe('Admin test', () => {
             dictum.chai(res2);
             return orm.models.user
               .findOne({ where: { email: 'email2@wolox.com.ar' } })
-              .then(u => u.dataValues.admin.should.be.equal(true));
-          })
-          .then(() => done());
+              .then(u => u.dataValues.admin.should.be.equal(true))
+              .then(() => done());
+          });
       });
     });
     it('Should fail because of invalid token', done => {
@@ -469,13 +463,10 @@ describe('Admin test', () => {
           .request(server)
           .post('/admin/users')
           .send({
-            email: 'email1@wolox.com.ar',
-            admin: {
-              firstname: 'Alan',
-              lastname: 'Rinaldi',
-              email: 'email2@wolox.com.ar',
-              password: '12345678'
-            }
+            firstname: 'Alan',
+            lastname: 'Rinaldi',
+            email: 'email2@wolox.com.ar',
+            password: '12345678'
           })
           .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
           .catch(err => {
@@ -485,25 +476,26 @@ describe('Admin test', () => {
       });
     });
     it('Should fail because of permission denied', done => {
-      return successfulLogin().then(res => {
-        return chai
-          .request(server)
-          .post('/admin/users')
-          .send({
-            email: 'email2@wolox.com.ar',
-            admin: {
+      return chai
+        .request(server)
+        .post('/users/sessions')
+        .send({ email: 'email2@wolox.com.ar', password: '12345678' })
+        .then(res => {
+          return chai
+            .request(server)
+            .post('/admin/users')
+            .send({
               firstname: 'Alan',
               lastname: 'Rinaldi',
               email: 'email2@wolox.com.ar',
               password: '12345678'
-            }
-          })
-          .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
-          .catch(err => {
-            err.response.should.have.status(401);
-          })
-          .then(() => done());
-      });
+            })
+            .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+            .catch(err => {
+              err.response.should.have.status(401);
+            })
+            .then(() => done());
+        });
     });
   });
 });

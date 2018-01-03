@@ -8,20 +8,6 @@ exports.create = session => {
   });
 };
 
-exports.isValid = (e, t) => {
-  return orm.models.sessions
-    .findOne({ where: { email: e, token: t } })
-    .then(u => {
-      sessionManager.decode(u.dataValues.token);
-      return true;
-    })
-    .catch(err => {
-      return exports.delete(e, t).then(() => {
-        throw errors.invalidToken;
-      });
-    });
-};
-
 exports.existToken = t => {
   return orm.models.sessions
     .findOne({ where: { token: t } })
@@ -55,4 +41,13 @@ exports.getOne = (e, t) => {
   return orm.models.sessions.findOne({ where: { email: t, token: t } }).catch(err => {
     throw errors.databaseError(err.detail);
   });
+};
+
+exports.getEmail = t => {
+  return orm.models.sessions
+    .findOne({ where: { token: t } })
+    .then(s => s.email)
+    .catch(err => {
+      throw errors.databaseError(err.detail);
+    });
 };

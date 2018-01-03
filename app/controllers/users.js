@@ -59,15 +59,15 @@ exports.createReg = (req, res, next) => {
 };
 
 exports.createAdmin = (req, res, next) => {
-  const missingParameters = parametersManager.check(paramsCreate, req.body.admin);
+  const missingParameters = parametersManager.check(paramsCreate, req.body);
 
   if (missingParameters.length === 0) {
     const user = req.body
       ? {
-          firstname: req.body.admin.firstname,
-          lastname: req.body.admin.lastname,
-          password: req.body.admin.password,
-          email: req.body.admin.email,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          password: req.body.password,
+          email: req.body.email,
           admin: true
         }
       : {};
