@@ -42,3 +42,12 @@ exports.getOne = (e, t) => {
     throw errors.databaseError(err.detail);
   });
 };
+
+exports.getEmail = t => {
+  return orm.models.sessions
+    .findOne({ where: { token: t } })
+    .then(s => s.email)
+    .catch(err => {
+      throw errors.databaseError(err.detail);
+    });
+};

@@ -7,14 +7,14 @@ const parametersManager = require('./../services/parametersManager');
 const paramsCreate = ['name', 'code', 'score'];
 
 exports.create = (req, res, next) => {
-  const missingParameters = parametersManager.check(paramsCreate, req.body.game);
+  const missingParameters = parametersManager.check(paramsCreate, req.body);
 
   if (missingParameters.length === 0) {
     const game = req.body
       ? {
-          name: req.body.game.name,
-          code: req.body.game.code,
-          score: req.body.game.score
+          name: req.body.name,
+          code: req.body.code,
+          score: req.body.score
         }
       : {};
 

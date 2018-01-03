@@ -6,14 +6,6 @@ const chai = require('chai'),
   errors = require('./../app/errors'),
   should = chai.should();
 
-const delay = time => {
-  return new Promise(function(fulfill, reject) {
-    setTimeout(function() {
-      fulfill();
-    }, time);
-  });
-};
-
 const successfulLogin = cb => {
   return chai
     .request(server)
@@ -29,12 +21,9 @@ describe('/games POST', () => {
         .post('/games')
         .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
         .send({
-          email: 'email1@wolox.com.ar',
-          game: {
-            name: 'game2',
-            code: 'code2',
-            score: 10
-          }
+          name: 'game2',
+          code: 'code2',
+          score: 10
         })
         .then(res2 => {
           res2.should.have.status(201);
@@ -50,11 +39,8 @@ describe('/games POST', () => {
         .post('/games')
         .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
         .send({
-          email: 'email1@wolox.com.ar',
-          game: {
-            code: 'code2',
-            score: 10
-          }
+          code: 'code2',
+          score: 10
         })
         .catch(err => {
           err.should.have.status(400);
@@ -71,12 +57,9 @@ describe('/games POST', () => {
         .post('/games')
         .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
         .send({
-          email: 'email1@wolox.com.ar',
-          game: {
-            name: 'game2',
-            code: 'code1',
-            score: 10
-          }
+          name: 'game2',
+          code: 'code1',
+          score: 10
         })
         .catch(err => {
           err.should.have.status(400);
@@ -88,24 +71,22 @@ describe('/games POST', () => {
   });
   it('Should fail because of invalid token', done => {
     return successfulLogin().then(res => {
-      delay(1000).then(() => {
+      setTimeout(() => {
         return chai
           .request(server)
           .post('/games')
           .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
           .send({
-            email: 'email1@wolox.com.ar',
-            game: {
-              name: 'game2',
-              code: 'code1',
-              score: 10
-            }
+            name: 'game2',
+            code: 'code1',
+            score: 10
           })
           .catch(err => {
             err.should.have.status(401);
+            err.response.res.statusMessage.should.be.equal('Unauthorized');
           })
           .then(() => done());
-      });
+      }, 1000);
     });
   });
 });
@@ -127,16 +108,17 @@ describe('/games GET', () => {
   it('Should fail because invalid token', done => {
     return successfulLogin().then(res => {
       res.should.have.status(201);
-      delay(1000).then(() => {
+      setTimeout(() => {
         return chai
           .request(server)
           .get('/games')
           .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
           .catch(err => {
             err.response.should.have.status(401);
+            err.response.res.statusMessage.should.be.equal('Unauthorized');
           })
           .then(() => done());
-      });
+      }, 1000);
     });
   });
 });
