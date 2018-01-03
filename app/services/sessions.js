@@ -8,9 +8,9 @@ exports.create = session => {
   });
 };
 
-exports.existToken = t => {
+exports.existToken = token => {
   return orm.models.sessions
-    .findOne({ where: { token: t } })
+    .findOne({ where: { token } })
     .then(u => {
       return true;
     })
@@ -25,27 +25,27 @@ exports.getCount = email => {
   });
 };
 
-exports.delete = t => {
-  return orm.models.sessions.destroy({ where: { token: t } }).catch(err => {
+exports.delete = token => {
+  return orm.models.sessions.destroy({ where: { token } }).catch(err => {
     throw errors.databaseError(err.detail);
   });
 };
 
-exports.deleteAll = e => {
-  return orm.models.sessions.destroy({ where: { email: e } }).catch(err => {
+exports.deleteAll = email => {
+  return orm.models.sessions.destroy({ where: { email } }).catch(err => {
     throw errors.databaseError(err.detail);
   });
 };
 
-exports.getOne = (e, t) => {
-  return orm.models.sessions.findOne({ where: { email: t, token: t } }).catch(err => {
+exports.getOne = (email, token) => {
+  return orm.models.sessions.findOne({ where: { email, token } }).catch(err => {
     throw errors.databaseError(err.detail);
   });
 };
 
-exports.getEmail = t => {
+exports.getEmail = token => {
   return orm.models.sessions
-    .findOne({ where: { token: t } })
+    .findOne({ where: { token } })
     .then(s => s.email)
     .catch(err => {
       throw errors.databaseError(err.detail);

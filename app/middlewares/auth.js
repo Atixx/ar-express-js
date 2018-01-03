@@ -30,15 +30,18 @@ exports.secure = (req, res, next) => {
 exports.admin = (req, res, next) => {
   const auth = req.headers[sessionManager.HEADER_NAME];
 
-  return sessionService.getEmail(auth).then(email => {
-    userService.getByEmail(email).then(u => {
-      if (u.admin) {
-        req.email = email;
-        next();
-      } else {
-        res.status(401);
-        res.end();
-      }
-    });
-  });
+  return sessionService
+    .getEmail(auth)
+    .then(email => {
+      userService.getByEmail(email).then(u => {
+        if (u.admin) {
+          req.email = email;
+          next();
+        } else {
+          res.status(401);
+          res.end();
+        }
+      });
+    })
+    .catch(err => next(err));
 };

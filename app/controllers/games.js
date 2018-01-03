@@ -9,7 +9,7 @@ const paramsCreate = ['name', 'code', 'score'];
 exports.create = (req, res, next) => {
   const missingParameters = parametersManager.check(paramsCreate, req.body);
 
-  if (missingParameters.length === 0) {
+  if (!missingParameters.length) {
     const game = req.body
       ? {
           name: req.body.name,
@@ -38,7 +38,6 @@ exports.list = (req, res, next) => {
     .then(u => {
       res.status(200);
       res.send(u);
-      res.end();
     })
     .catch(err => {
       next(errors.defaultError(err));

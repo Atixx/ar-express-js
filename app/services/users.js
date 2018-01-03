@@ -30,14 +30,12 @@ exports.getAll = (limit = 20, page = 0) => {
 };
 
 exports.updateAdmin = email => {
-  return orm.models.user
-    .findOne({ where: { email } })
+  return exports
+    .getByEmail(email)
     .then(u => {
-      u
-        .updateAttributes({
-          admin: true
-        })
-        .then(() => {});
+      u.updateAttributes({
+        admin: true
+      });
     })
     .catch(err => {
       throw errors.databaseError(err.detail);
