@@ -45,7 +45,6 @@ exports.list = (req, res, next) => {
     .then(u => {
       res.status(200);
       res.send(u);
-      res.end();
     })
     .catch(err => {
       next(errors.defaultError(err));
