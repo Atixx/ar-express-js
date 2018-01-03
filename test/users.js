@@ -476,22 +476,26 @@ describe('Admin test', () => {
       });
     });
     it('Should fail because of permission denied', done => {
-      return successfulLogin().then(res => {
-        return chai
-          .request(server)
-          .post('/admin/users')
-          .send({
-            firstname: 'Alan',
-            lastname: 'Rinaldi',
-            email: 'email2@wolox.com.ar',
-            password: '12345678'
-          })
-          .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
-          .catch(err => {
-            err.response.should.have.status(401);
-          })
-          .then(() => done());
-      });
+      return chai
+        .request(server)
+        .post('/users/sessions')
+        .send({ email: 'email2@wolox.com.ar', password: '12345678' })
+        .then(res => {
+          return chai
+            .request(server)
+            .post('/admin/users')
+            .send({
+              firstname: 'Alan',
+              lastname: 'Rinaldi',
+              email: 'email2@wolox.com.ar',
+              password: '12345678'
+            })
+            .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+            .catch(err => {
+              err.response.should.have.status(401);
+            })
+            .then(() => done());
+        });
     });
   });
 });

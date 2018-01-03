@@ -9,7 +9,7 @@ const paramsCreate = ['name', 'code', 'score'];
 exports.create = (req, res, next) => {
   const missingParameters = parametersManager.check(paramsCreate, req.body);
 
-  if (missingParameters.length === 0) {
+  if (!missingParameters.length) {
     const game = req.body
       ? {
           name: req.body.name,
