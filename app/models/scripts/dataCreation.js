@@ -10,7 +10,8 @@ exports.execute = db => {
           firstname: 'firstname1',
           lastname: 'lastname1',
           email: 'email1@wolox.com.ar',
-          password: hash
+          password: hash,
+          admin: true
         })
       );
       data.push(
@@ -19,7 +20,8 @@ exports.execute = db => {
           lastname: 'lastname2',
           username: 'username2',
           email: 'email2@wolox.com.ar',
-          password: hash
+          password: hash,
+          admin: false
         })
       );
       data.push(
@@ -28,7 +30,8 @@ exports.execute = db => {
           lastname: 'lastname3',
           username: 'username3',
           email: 'email3@wolox.com.ar',
-          password: hash
+          password: hash,
+          admin: false
         })
       );
       return Promise.all(data);

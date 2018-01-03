@@ -16,3 +16,28 @@ exports.getOne = user => {
     throw errors.databaseError(err.detail);
   });
 };
+
+exports.getAll = (limit = 20, page = 0) => {
+  return orm.models.user
+    .findAll({
+      order: [['id', 'ASC']],
+      offset: limit * page,
+      limit
+    })
+    .catch(err => {
+      throw errors.databaseError(err.detail);
+    });
+};
+
+exports.updateAdmin = email => {
+  return exports
+    .getByEmail(email)
+    .then(u => {
+      u.updateAttributes({
+        admin: true
+      });
+    })
+    .catch(err => {
+      throw errors.databaseError(err.detail);
+    });
+};

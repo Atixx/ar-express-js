@@ -3,6 +3,8 @@ const chai = require('chai'),
   dictum = require('dictum.js'),
   sessionManager = require('./../app/services/sessionManager'),
   sessionService = require('./../app/services/sessions'),
+  orm = require('./../app/orm'),
+  errors = require('./../app/errors'),
   should = chai.should();
 
 const successfulLogin = cb => {
@@ -12,7 +14,7 @@ const successfulLogin = cb => {
     .send({ email: 'email1@wolox.com.ar', password: '12345678' });
 };
 
-describe('users test', () => {
+describe('Regular users test', () => {
   describe('/users/sessions POST', () => {
     it('should fail because of invalid email', done => {
       chai
@@ -95,7 +97,7 @@ describe('users test', () => {
   });
   describe('/users POST', () => {
     it('should be successful', done => {
-      chai
+      return chai
         .request(server)
         .post('/users')
         .send({
@@ -311,26 +313,6 @@ describe('users test', () => {
         });
       });
     });
-    it('Should fail because of email is missing', done => {
-      return successfulLogin().then(res => {
-        res.should.have.status(201);
-        return sessionService.getCount(res.body.email).then(count => {
-          count.should.to.equal(1);
-          return chai
-            .request(server)
-            .post('/users/logout')
-            .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
-            .catch(err => {
-              err.should.have.status(400);
-              err.response.text.should.include('Missing parameters: email');
-              return sessionService.getCount(res.body.email).then(count2 => {
-                count2.should.to.equal(1);
-              });
-            })
-            .then(() => done());
-        });
-      });
-    });
   });
 
   describe('/users/logout/all POST', () => {
@@ -382,6 +364,29 @@ describe('users test', () => {
         });
       });
     });
+    it('Should fail because of email is missing', done => {
+      return successfulLogin().then(res => {
+        res.should.have.status(201);
+        return successfulLogin().then(res2 => {
+          res2.should.have.status(201);
+          return sessionService.getCount(res2.body.email).then(count => {
+            count.should.to.equal(2);
+            return chai
+              .request(server)
+              .post('/users/logout/all')
+              .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+              .catch(err => {
+                err.should.have.status(400);
+                err.response.text.should.include('Missing parameters: email');
+                return sessionService.getCount(res.body.email).then(count2 => {
+                  count2.should.to.equal(2);
+                });
+              })
+              .then(() => done());
+          });
+        });
+      });
+    });
     it('Should successful because sessions database is empty', done => {
       return successfulLogin().then(res => {
         res.should.have.status(201);
@@ -404,6 +409,125 @@ describe('users test', () => {
             });
           });
         }, 200);
+      });
+    });
+  });
+});
+
+describe('Admin test', () => {
+  describe('/admin/users POST', () => {
+    it('Should be successful because create a new admin user', done => {
+      return successfulLogin().then(res => {
+        return chai
+          .request(server)
+          .post('/admin/users')
+          .send({
+            firstname: 'Alan',
+            lastname: 'Rinaldi',
+            email: 'alan.rinaldi@wolox.com.ar',
+            password: '12345678'
+          })
+          .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+          .then(res2 => {
+            res2.should.have.status(201);
+            dictum.chai(res2);
+          })
+          .then(() => done());
+      });
+    });
+    it('Should be successful because update a user to admin', done => {
+      return successfulLogin().then(res => {
+        return chai
+          .request(server)
+          .post('/admin/users')
+          .send({
+            firstname: 'Alan',
+            lastname: 'Rinaldi',
+            email: 'email2@wolox.com.ar',
+            password: '12345678'
+          })
+          .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+          .then(res2 => {
+            res2.should.have.status(200);
+            dictum.chai(res2);
+            return orm.models.user
+              .findOne({ where: { email: 'email2@wolox.com.ar' } })
+              .then(u => u.dataValues.admin.should.be.equal(true))
+              .then(() => done());
+          });
+      });
+    });
+    it('Should fail because of invalid token', done => {
+      return successfulLogin().then(res => {
+        return chai
+          .request(server)
+          .post('/admin/users')
+          .send({
+            firstname: 'Alan',
+            lastname: 'Rinaldi',
+            email: 'email2@wolox.com.ar',
+            password: '12345678'
+          })
+          .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+          .catch(err => {
+            err.response.should.have.status(401);
+          })
+          .then(() => done());
+      });
+    });
+    it('Should fail because of permission denied', done => {
+      return chai
+        .request(server)
+        .post('/users/sessions')
+        .send({ email: 'email2@wolox.com.ar', password: '12345678' })
+        .then(res => {
+          return chai
+            .request(server)
+            .post('/admin/users')
+            .send({
+              firstname: 'Alan',
+              lastname: 'Rinaldi',
+              email: 'email2@wolox.com.ar',
+              password: '12345678'
+            })
+            .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+            .catch(err => {
+              err.response.should.have.status(401);
+            })
+            .then(() => done());
+        });
+    });
+  });
+});
+
+describe('Users list test', () => {
+  describe('/users GET', () => {
+    it('Should be successful', done => {
+      return successfulLogin().then(res => {
+        res.should.have.status(201);
+        return chai
+          .request(server)
+          .get('/users')
+          .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+          .then(res2 => {
+            res2.should.have.status(200);
+          })
+          .then(() => done());
+      });
+    });
+    it('Should fail because invalid token', done => {
+      return successfulLogin().then(res => {
+        res.should.have.status(201);
+        setTimeout(() => {
+          return chai
+            .request(server)
+            .get('/users')
+            .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
+            .catch(err => {
+              err.response.should.have.status(401);
+            })
+            .then(() => done());
+        }, 1000);
       });
     });
   });
