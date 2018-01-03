@@ -21,12 +21,9 @@ describe('/games POST', () => {
         .post('/games')
         .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
         .send({
-          email: 'email1@wolox.com.ar',
-          game: {
-            name: 'game2',
-            code: 'code2',
-            score: 10
-          }
+          name: 'game2',
+          code: 'code2',
+          score: 10
         })
         .then(res2 => {
           res2.should.have.status(201);
@@ -42,11 +39,8 @@ describe('/games POST', () => {
         .post('/games')
         .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
         .send({
-          email: 'email1@wolox.com.ar',
-          game: {
-            code: 'code2',
-            score: 10
-          }
+          code: 'code2',
+          score: 10
         })
         .catch(err => {
           err.should.have.status(400);
@@ -63,12 +57,9 @@ describe('/games POST', () => {
         .post('/games')
         .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
         .send({
-          email: 'email1@wolox.com.ar',
-          game: {
-            name: 'game2',
-            code: 'code1',
-            score: 10
-          }
+          name: 'game2',
+          code: 'code1',
+          score: 10
         })
         .catch(err => {
           err.should.have.status(400);
@@ -86,12 +77,9 @@ describe('/games POST', () => {
           .post('/games')
           .set(sessionManager.HEADER_NAME, res.headers[sessionManager.HEADER_NAME])
           .send({
-            email: 'email1@wolox.com.ar',
-            game: {
-              name: 'game2',
-              code: 'code1',
-              score: 10
-            }
+            name: 'game2',
+            code: 'code1',
+            score: 10
           })
           .catch(err => {
             err.should.have.status(401);
