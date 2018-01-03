@@ -30,8 +30,8 @@ exports.getAll = (limit = 20, page = 0) => {
 };
 
 exports.updateAdmin = email => {
-  return orm.models.user
-    .findOne({ where: { email } })
+  return exports
+    .getByEmail(email)
     .then(u => {
       u
         .updateAttributes({

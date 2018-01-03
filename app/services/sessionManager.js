@@ -14,14 +14,3 @@ exports.decode = toDecode => {
   const decode = jwt.decode(toDecode, SECRET);
   return decode.message;
 };
-
-// exports.decode = toDecode => {
-//   return new Promise(function(fulfill, reject) {
-//     try {
-//       const decode = jwt.decode(toDecode, SECRET);
-//       fulfill(decode.message);
-//     } catch (e) {
-//       reject(e);
-//     }
-//   });
-// };

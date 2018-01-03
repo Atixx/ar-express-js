@@ -61,7 +61,7 @@ exports.createReg = (req, res, next) => {
 exports.createAdmin = (req, res, next) => {
   const missingParameters = parametersManager.check(paramsCreate, req.body);
 
-  if (missingParameters.length === 0) {
+  if (!missingParameters.length) {
     const user = req.body
       ? {
           firstname: req.body.firstname,
@@ -97,7 +97,7 @@ exports.createAdmin = (req, res, next) => {
 exports.login = (req, res, next) => {
   const missingParameters = parametersManager.check(paramsLogin, req.body);
 
-  if (missingParameters.length === 0) {
+  if (!missingParameters.length) {
     const user = req.body
       ? {
           email: req.body.email,
