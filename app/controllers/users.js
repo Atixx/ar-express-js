@@ -33,7 +33,7 @@ exports.createUser = (user, res, next) => {
 exports.createReg = (req, res, next) => {
   const missingParameters = parametersManager.check(paramsCreate, req.body);
 
-  if (missingParameters.length === 0) {
+  if (!missingParameters.length) {
     const user = req.body
       ? {
           firstname: req.body.firstname,
