@@ -1,5 +1,7 @@
 const orm = require('./../orm'),
-  errors = require('../errors');
+  errors = require('../errors'),
+  Sequelize = require('sequelize'),
+  Op = Sequelize.Op;
 
 exports.create = game => {
   return orm.models.game.create(game).catch(err => {
@@ -20,7 +22,15 @@ exports.getAll = (limit = 20, page = 0) => {
 };
 
 exports.checkGame = gameid => {
-  return orm.models.game.findById(gameid).catch(err => {
-    throw errors.databaseError(err.detail);
-  });
+  return orm.models.game
+    .findOne({
+      where: {
+        id: {
+          [Op.eq]: gameid
+        }
+      }
+    })
+    .catch(err => {
+      throw errors.databaseError(err.detail);
+    });
 };
