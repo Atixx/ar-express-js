@@ -12,13 +12,13 @@ if (!fs.existsSync(logDir)) {
 const tsFormat = () => new Date().toLocaleTimeString();
 const logger = new winston.Logger({
   transports: [
-    // new winston.transports.Console({
-    //   timestamp: tsFormat,
-    //   colorize: false,
-    //   prettyPrint: true,
-    //   handleExceptions: config.loggerHandlesExceptions,
-    //   humanReadableUnhandledException: config.loggerHandlesExceptions
-    // }),
+    new winston.transports.Console({
+      timestamp: tsFormat,
+      colorize: false,
+      prettyPrint: true,
+      handleExceptions: config.loggerHandlesExceptions,
+      humanReadableUnhandledException: config.loggerHandlesExceptions
+    }),
     new winston.transports.File({
       name: 'complete',
       filename: `${logDir}/complete.log`,
