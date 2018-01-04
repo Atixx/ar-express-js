@@ -6,6 +6,7 @@ const userService = require('../services/users');
 const sessionService = require('../services/sessions');
 const sessionManager = require('./../services/sessionManager');
 const parametersManager = require('./../services/parametersManager');
+const config = require('./../../config');
 
 const paramsCreate = ['firstname', 'lastname', 'password', 'email'];
 const paramsLogin = ['password', 'email'];
@@ -109,7 +110,7 @@ exports.login = (req, res, next) => {
       if (u) {
         bcrypt.compare(user.password, u.password).then(isValid => {
           if (isValid) {
-            const auth = sessionManager.encode(u.email, 0.5);
+            const auth = sessionManager.encode(u.email, config.common.token.exptime);
 
             const session = {
               email: u.email,

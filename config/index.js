@@ -46,6 +46,9 @@ const config = {
     rollbar: {
       accessToken: process.env.ROLLBAR_ACCESS_TOKEN,
       environment: process.env.ROLLBAR_ENV
+    },
+    token: {
+      exptime: process.env.NODE_EXP_TIME
     }
   }
 };
