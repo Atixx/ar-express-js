@@ -1,28 +1,35 @@
 'use strict';
 
 const errors = require('../errors');
+const matchService = require('../services/matches');
 const gameService = require('../services/games');
 const parametersManager = require('./../services/parametersManager');
 
-const paramsCreate = ['name', 'code', 'score'];
+const paramsCreate = ['user_id', 'hits'];
 
 exports.create = (req, res, next) => {
   const missingParameters = parametersManager.check(paramsCreate, req.body);
 
   if (!missingParameters.length) {
-    const game = req.body
+    const match = req.body
       ? {
-          name: req.body.name,
-          code: req.body.code,
-          score: req.body.score
+          user_id: req.body.user_id,
+          game_id: req.params.game_id,
+          hits: req.body.hits
         }
       : {};
 
     return gameService
-      .create(game)
+      .checkGame(match.game_id)
       .then(u => {
-        res.status(201);
-        res.end();
+        if (u) {
+          return matchService.create(match).then(v => {
+            res.status(201);
+            res.end();
+          });
+        } else {
+          next(errors.defaultError(errors.notFound));
+        }
       })
       .catch(next);
   } else {
@@ -31,8 +38,8 @@ exports.create = (req, res, next) => {
 };
 
 exports.list = (req, res, next) => {
-  return gameService
-    .getAll()
+  return matchService
+    .getMatches(req.params.game_id)
     .then(u => {
       res.status(200);
       res.send(u);

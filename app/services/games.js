@@ -18,3 +18,9 @@ exports.getAll = (limit = 20, page = 0) => {
       throw errors.databaseError(err.detail);
     });
 };
+
+exports.checkGame = gameid => {
+  return orm.models.game.findById(gameid).catch(err => {
+    throw errors.databaseError(err.detail);
+  });
+};

@@ -43,5 +43,5 @@ exports.admin = (req, res, next) => {
         }
       });
     })
-    .catch(err => next(err));
+    .catch(next);
 };
