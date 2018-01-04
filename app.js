@@ -25,7 +25,7 @@ const bodyParserUrlencodedConfig = () => ({
 
 const init = () => {
   const app = express();
-  const port = config.common.port || 8080;
+  const port = process.env.PORT || 8080;
   module.exports = app;
 
   app.use('/docs', express.static(path.join(__dirname, 'docs')));
@@ -64,7 +64,7 @@ const init = () => {
 
       app.listen(process.env.PORT);
 
-      logger.info(`Listening on port: ${port}`);
+      logger.info(`Listening on port: ${process.env.PORT}`);
     })
     .catch(logger.error);
 };
