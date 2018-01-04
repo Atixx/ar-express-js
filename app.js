@@ -24,7 +24,6 @@ const bodyParserUrlencodedConfig = () => ({
 });
 
 const init = () => {
-  console.log(process.env.PORT);
   const app = express();
   const port = config.common.port || 8080;
   module.exports = app;
@@ -63,7 +62,6 @@ const init = () => {
       });
       app.use(rollbar.errorHandler());
 
-      logger.info('POR ESCUCHAR');
       app.listen(process.env.PORT);
 
       logger.info(`Listening on port: ${port}`);
