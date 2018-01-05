@@ -7,7 +7,7 @@ const SECRET = config.common.session.secret;
 exports.HEADER_NAME = config.common.session.header_name;
 
 exports.encode = (toEncode, timeexp = 3600) => {
-  return jwt.encode({ message: toEncode, exp: Date.now() / 1000 + timeexp }, SECRET);
+  return jwt.encode({ message: toEncode, exp: Date.now() / 1000 + parseFloat(timeexp) }, SECRET);
 };
 
 exports.decode = toDecode => {
